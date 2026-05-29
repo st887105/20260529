@@ -417,6 +417,11 @@ function resolveContest(raw) {
   return null;
 }
 
+// ═══ 工具（必須最先定義）════════════════════════════════════
+const el=id=>document.getElementById(id);
+const v=id=>el(id).value.trim();
+const delay=ms=>new Promise(r=>setTimeout(r,ms));
+
 // ═══ 狀態 ═══════════════════════════════════════════════════
 let gasUrl='', connected=false, sheetsData=[], parsedManual=[];
 
@@ -426,8 +431,8 @@ window.onload = () => {
   gasUrl = (saved&&saved.trim()) ? saved.trim()
          : (DEFAULT_GAS_URL.trim()) ? DEFAULT_GAS_URL.trim() : '';
   if (gasUrl) { el('gasUrl').value=gasUrl; connectGAS(true); }
+  el('gasUrl').addEventListener('input', () => { gasUrl=el('gasUrl').value.trim(); localStorage.setItem('gasUrl',gasUrl); });
 };
-el('gasUrl').addEventListener('input', () => { gasUrl=el('gasUrl').value.trim(); localStorage.setItem('gasUrl',gasUrl); });
 
 // ═══ UI ══════════════════════════════════════════════════════
 function sw(name) {
@@ -678,10 +683,7 @@ async function runSetTpl(){
   } catch(e){hideOvl();smartErr(e);}
 }
 
-// ═══ 工具 ════════════════════════════════════════════════════
-const el=id=>document.getElementById(id);
-const v=id=>el(id).value.trim();
-const delay=ms=>new Promise(r=>setTimeout(r,ms));
+// ═══ 工具（輔助）════════════════════════════════════════════
 function chkConn(){if(!connected){showErr('請先填入 GAS URL 並點「連線測試」','');return false;}return true;}
 function showOvl(msg){el('ovMsg').textContent=msg||'處理中…';el('overlay').classList.add('show');}
 function hideOvl(){el('overlay').classList.remove('show');}
