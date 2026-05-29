@@ -6,151 +6,163 @@
 <title>車城國中｜機器人競賽領據產生器</title>
 <style>
 :root{
-  --primary:#1a5276;--pl:#2e86c1;--accent:#e67e22;
-  --success:#1e8449;--danger:#c0392b;
-  --bg:#f4f6f8;--card:#fff;--border:#d5d8dc;
-  --text:#1c2833;--muted:#7f8c8d;--r:10px;
-  --shadow:0 2px 12px rgba(0,0,0,.10);
+  --p:#1a5276;--pl:#2e86c1;--a:#e67e22;
+  --ok:#1e8449;--err:#c0392b;--warn:#d4860b;
+  --bg:#f4f6f8;--card:#fff;--bd:#d5d8dc;
+  --tx:#1c2833;--mu:#7f8c8d;--r:10px;
+  --sh:0 2px 12px rgba(0,0,0,.10);
 }
 *{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'微軟正黑體','Microsoft JhengHei','Noto Sans TC',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:15px;}
-header{background:linear-gradient(135deg,var(--primary),var(--pl));color:#fff;padding:16px 24px;display:flex;align-items:center;gap:14px;box-shadow:0 2px 8px rgba(0,0,0,.2);}
-.logo{font-size:2rem;}.ht h1{font-size:1.2rem;font-weight:700;}.ht p{font-size:.8rem;opacity:.8;margin-top:2px;}
+body{font-family:'微軟正黑體','Microsoft JhengHei','Noto Sans TC',sans-serif;background:var(--bg);color:var(--tx);font-size:15px;}
+header{background:linear-gradient(135deg,var(--p),var(--pl));color:#fff;padding:16px 24px;display:flex;align-items:center;gap:14px;box-shadow:0 2px 8px rgba(0,0,0,.2);}
+.logo{font-size:1.9rem;}.ht h1{font-size:1.15rem;font-weight:700;}.ht p{font-size:.78rem;opacity:.8;margin-top:2px;}
 .vb{margin-left:auto;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);border-radius:20px;padding:3px 10px;font-size:.75rem;}
-main{max-width:980px;margin:24px auto;padding:0 16px 60px;}
+main{max-width:1000px;margin:20px auto;padding:0 16px 60px;}
 
-/* Gas bar */
-.gbar{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:14px 18px;margin-bottom:18px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;box-shadow:var(--shadow);}
-.gbar label{font-weight:600;font-size:.88rem;color:var(--muted);white-space:nowrap;}
-.gbar input{flex:1;min-width:260px;border:1px solid var(--border);border-radius:6px;padding:7px 10px;font-size:.88rem;}
-.bsm{background:var(--primary);color:#fff;border:none;border-radius:6px;padding:7px 16px;cursor:pointer;font-size:.88rem;font-weight:600;font-family:inherit;transition:.2s;}
+/* GAS bar */
+.gbar{background:var(--card);border:1px solid var(--bd);border-radius:var(--r);padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;box-shadow:var(--sh);}
+.gbar label{font-weight:600;font-size:.85rem;color:var(--mu);white-space:nowrap;}
+.gbar input{flex:1;min-width:240px;border:1px solid var(--bd);border-radius:6px;padding:7px 10px;font-size:.88rem;}
+.bsm{background:var(--p);color:#fff;border:none;border-radius:6px;padding:7px 14px;cursor:pointer;font-size:.85rem;font-weight:600;font-family:inherit;white-space:nowrap;transition:.2s;}
 .bsm:hover{background:var(--pl);}
-.cbadge{font-size:.82rem;padding:4px 10px;border-radius:20px;background:#eee;white-space:nowrap;}
-.cbadge.ok{background:#d5f5e3;color:var(--success);}.cbadge.err{background:#fadbd8;color:var(--danger);}
+.cbadge{font-size:.8rem;padding:3px 10px;border-radius:20px;background:#eee;white-space:nowrap;}
+.cbadge.ok{background:#d5f5e3;color:var(--ok);}.cbadge.err{background:#fadbd8;color:var(--err);}
 
-/* Error */
-.ebanner{background:#fadbd8;border:1px solid #e74c3c;border-radius:8px;padding:12px 16px;color:var(--danger);font-size:.9rem;margin-bottom:14px;display:none;gap:10px;align-items:flex-start;}
-.ebanner.show{display:flex;}.ebanner .et{font-weight:700;margin-bottom:4px;}
-.ebanner ol{font-size:.83rem;line-height:1.8;padding-left:18px;margin-top:4px;}
-
-/* Info */
-.ibanner{background:#eaf4fb;border:1px solid #85c1e9;border-radius:8px;padding:10px 14px;color:#1a5276;font-size:.85rem;margin-bottom:14px;display:flex;gap:8px;}
+/* Error/info */
+.ebanner{background:#fadbd8;border:1px solid #e74c3c;border-radius:8px;padding:12px 14px;color:var(--err);font-size:.88rem;margin-bottom:14px;display:none;gap:8px;align-items:flex-start;flex-wrap:wrap;}
+.ebanner.show{display:flex;}.et{font-weight:700;margin-bottom:3px;}
+.ebanner ol{font-size:.82rem;line-height:1.8;padding-left:16px;margin-top:3px;}
+.ibanner{background:#eaf4fb;border:1px solid #85c1e9;border-radius:8px;padding:9px 14px;color:#1a5276;font-size:.83rem;margin-bottom:12px;display:flex;gap:7px;}
 
 /* Tabs */
-.tabs{display:flex;gap:0;margin-bottom:18px;border-bottom:2px solid var(--border);}
-.tbtn{padding:10px 18px;border:none;background:none;cursor:pointer;font-size:.9rem;font-weight:600;color:var(--muted);border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .2s;border-radius:6px 6px 0 0;font-family:inherit;}
-.tbtn.active{color:var(--primary);border-bottom-color:var(--primary);background:rgba(26,82,118,.06);}
+.tabs{display:flex;gap:0;margin-bottom:16px;border-bottom:2px solid var(--bd);}
+.tbtn{padding:9px 16px;border:none;background:none;cursor:pointer;font-size:.88rem;font-weight:600;color:var(--mu);border-bottom:3px solid transparent;margin-bottom:-2px;transition:.2s;border-radius:6px 6px 0 0;font-family:inherit;}
+.tbtn.active{color:var(--p);border-bottom-color:var(--p);background:rgba(26,82,118,.06);}
 .tpanel{display:none;}.tpanel.active{display:block;}
 
 /* Card */
-.card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:22px 24px;margin-bottom:18px;box-shadow:var(--shadow);}
-.ctitle{font-size:1rem;font-weight:700;color:var(--primary);margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:var(--r);padding:20px 22px;margin-bottom:16px;box-shadow:var(--sh);}
+.ctitle{font-size:.95rem;font-weight:700;color:var(--p);margin-bottom:14px;padding-bottom:9px;border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:7px;}
 
 /* Form */
-.fg{display:flex;flex-direction:column;gap:5px;}
-.fg label{font-size:.83rem;font-weight:600;color:var(--muted);}
-.fg input,.fg select,.fg textarea{border:1px solid var(--border);border-radius:6px;padding:9px 12px;font-size:.95rem;font-family:inherit;background:#fff;transition:border .2s;}
+.fg{display:flex;flex-direction:column;gap:4px;}
+.fg label{font-size:.8rem;font-weight:600;color:var(--mu);}
+.fg input,.fg select,.fg textarea{border:1px solid var(--bd);border-radius:6px;padding:8px 11px;font-size:.92rem;font-family:inherit;background:#fff;transition:border .2s;}
 .fg input:focus,.fg select:focus,.fg textarea:focus{outline:none;border-color:var(--pl);box-shadow:0 0 0 2px rgba(46,134,193,.15);}
-.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
 .full{grid-column:1/-1;}
-.hint{background:#eaf4fb;border-left:3px solid var(--pl);border-radius:0 6px 6px 0;padding:8px 12px;font-size:.82rem;color:#1a5276;margin-top:10px;}
+.hint{background:#eaf4fb;border-left:3px solid var(--pl);border-radius:0 6px 6px 0;padding:7px 11px;font-size:.8rem;color:#1a5276;margin-top:8px;}
 
 /* Buttons */
-.brow{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap;}
-.btn{display:inline-flex;align-items:center;gap:6px;border:none;border-radius:8px;padding:10px 22px;font-size:.92rem;font-weight:600;cursor:pointer;transition:.2s;min-height:44px;font-family:inherit;}
-.bp{background:var(--primary);color:#fff;}.bp:hover{background:var(--pl);}
-.ba{background:var(--accent);color:#fff;}.ba:hover{opacity:.9;}
-.bo{background:#fff;color:var(--primary);border:2px solid var(--primary);}.bo:hover{background:#eaf4fb;}
-.bsu{background:var(--success);color:#fff;}.bsu:hover{opacity:.9;}
+.brow{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;}
+.btn{display:inline-flex;align-items:center;gap:5px;border:none;border-radius:8px;padding:9px 20px;font-size:.9rem;font-weight:600;cursor:pointer;transition:.2s;min-height:40px;font-family:inherit;}
+.bp{background:var(--p);color:#fff;}.bp:hover{background:var(--pl);}
+.ba{background:var(--a);color:#fff;}.ba:hover{opacity:.9;}
+.bo{background:#fff;color:var(--p);border:2px solid var(--p);}.bo:hover{background:#eaf4fb;}
+.bsu{background:var(--ok);color:#fff;}.bsu:hover{opacity:.9;}
+.bdanger{background:var(--err);color:#fff;}.bdanger:hover{opacity:.9;}
 .btn:disabled{opacity:.45;cursor:not-allowed;}
 
-/* Batch mode tabs */
-.btabs{display:flex;gap:6px;margin-bottom:16px;}
-.btbtn{padding:7px 18px;border:1px solid var(--border);border-radius:6px;background:#fff;cursor:pointer;font-size:.88rem;font-weight:600;color:var(--muted);font-family:inherit;transition:.2s;}
-.btbtn.active{background:var(--primary);color:#fff;border-color:var(--primary);}
+/* Batch toggle */
+.btabs{display:flex;gap:6px;margin-bottom:14px;}
+.btbtn{padding:6px 16px;border:1px solid var(--bd);border-radius:6px;background:#fff;cursor:pointer;font-size:.85rem;font-weight:600;color:var(--mu);font-family:inherit;transition:.2s;}
+.btbtn.active{background:var(--p);color:#fff;border-color:var(--p);}
 
-/* Sheets import */
-.sheet-box{background:#f8fbff;border:1px dashed #85c1e9;border-radius:8px;padding:16px;margin-bottom:14px;}
-.sheet-box p{font-size:.85rem;color:var(--muted);margin-bottom:8px;line-height:1.6;}
-.url-row{display:flex;gap:8px;margin-bottom:8px;}
-.url-row input{flex:1;border:1px solid var(--border);border-radius:6px;padding:8px 12px;font-size:.9rem;}
-.sample-link{font-size:.82rem;color:var(--pl);text-decoration:none;display:inline-flex;align-items:center;gap:4px;}
-.sample-link:hover{text-decoration:underline;}
+/* Sheets */
+.sheet-box{background:#f8fbff;border:1px dashed #85c1e9;border-radius:8px;padding:14px;margin-bottom:12px;}
+.sheet-box p{font-size:.83rem;color:var(--mu);margin-bottom:7px;line-height:1.6;}
+.url-row{display:flex;gap:7px;margin-bottom:6px;}
+.url-row input{flex:1;border:1px solid var(--bd);border-radius:6px;padding:7px 11px;font-size:.88rem;}
+
+/* Table (sheets preview) */
+.ptable{width:100%;border-collapse:collapse;font-size:.82rem;margin-top:8px;}
+.ptable th{background:var(--p);color:#fff;padding:6px 8px;text-align:left;font-weight:600;white-space:nowrap;}
+.ptable td{padding:6px 8px;border-bottom:1px solid var(--bd);vertical-align:middle;}
+.ptable tr:hover td{background:#eaf4fb;}
+.cc{width:28px;text-align:center;}
+.ca-wrap{display:flex;align-items:center;gap:6px;margin-bottom:6px;font-size:.83rem;color:var(--mu);}
+.sc{margin-left:auto;color:var(--p);font-weight:600;font-size:.85rem;}
+.ct-sel{border:1px solid var(--bd);border-radius:4px;padding:3px 5px;font-size:.8rem;background:#fff;min-width:180px;}
 
 /* Manual batch */
-.batch-help{background:#fffbf0;border:1px solid #f0c040;border-radius:8px;padding:14px 16px;margin-bottom:14px;font-size:.85rem;line-height:1.7;}
-.batch-help strong{color:var(--primary);}
-.batch-help table{border-collapse:collapse;margin-top:8px;width:100%;}
-.batch-help th{background:var(--primary);color:#fff;padding:5px 10px;font-size:.8rem;text-align:left;}
-.batch-help td{padding:4px 10px;border-bottom:1px solid #eee;font-size:.82rem;}
-.batch-help td:first-child{font-weight:700;color:var(--primary);white-space:nowrap;}
-.batch-help code{background:#eee;padding:1px 5px;border-radius:3px;font-size:.8rem;}
-textarea.binput{width:100%;height:200px;border:1px solid var(--border);border-radius:6px;padding:10px 12px;font-family:'Consolas','Courier New',monospace;font-size:.85rem;resize:vertical;transition:border .2s;}
+.mbatch{background:#fffbf0;border:1px solid #f0c040;border-radius:8px;padding:12px 14px;margin-bottom:12px;font-size:.83rem;}
+.mbatch h4{color:var(--p);margin-bottom:8px;font-size:.88rem;}
+.fmt-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:8px;}
+.fmt-box{background:#fff;border:1px solid var(--bd);border-radius:6px;padding:10px 12px;}
+.fmt-box h5{font-size:.82rem;font-weight:700;color:var(--p);margin-bottom:6px;}
+.fmt-table{border-collapse:collapse;width:100%;}
+.fmt-table th{background:#eaf4fb;padding:4px 7px;font-size:.77rem;text-align:left;}
+.fmt-table td{padding:3px 7px;border-top:1px solid #eee;font-size:.78rem;}
+.fmt-table td:first-child{color:var(--p);font-weight:600;white-space:nowrap;}
+code{background:#eee;padding:1px 4px;border-radius:3px;font-size:.8rem;}
+textarea.binput{width:100%;height:180px;border:1px solid var(--bd);border-radius:6px;padding:9px 11px;font-family:'Consolas','Courier New',monospace;font-size:.83rem;resize:vertical;transition:border .2s;}
 textarea.binput:focus{outline:none;border-color:var(--pl);box-shadow:0 0 0 2px rgba(46,134,193,.15);}
-
-/* Preview table */
-.ptable{width:100%;border-collapse:collapse;font-size:.84rem;margin-top:10px;}
-.ptable th{background:var(--primary);color:#fff;padding:7px 10px;text-align:left;font-weight:600;white-space:nowrap;}
-.ptable td{padding:7px 10px;border-bottom:1px solid var(--border);vertical-align:middle;}
-.ptable tr:hover td{background:#eaf4fb;}
-.cc{width:32px;text-align:center;}
-.ca-wrap{display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:.85rem;color:var(--muted);}
-.sel-count{margin-left:auto;color:var(--primary);font-weight:600;}
-.badge{background:var(--primary);color:#fff;border-radius:3px;padding:1px 6px;font-size:.75rem;font-weight:600;}
-.badge.warn{background:var(--danger);}
-.ct-select{border:1px solid var(--border);border-radius:4px;padding:3px 6px;font-size:.82rem;background:#fff;}
+.badge{background:var(--p);color:#fff;border-radius:3px;padding:1px 5px;font-size:.72rem;font-weight:600;white-space:nowrap;}
+.badge.warn{background:var(--err);}
 
 /* Progress */
-.pw{background:#eee;border-radius:20px;height:8px;margin:14px 0 6px;overflow:hidden;}
-.pb{height:100%;background:linear-gradient(90deg,var(--primary),var(--pl));border-radius:20px;transition:width .4s;width:0%;}
-.pt{font-size:.82rem;color:var(--muted);text-align:center;margin-bottom:10px;}
+.pw{background:#eee;border-radius:20px;height:7px;margin:12px 0 5px;overflow:hidden;}
+.pb{height:100%;background:linear-gradient(90deg,var(--p),var(--pl));border-radius:20px;transition:width .4s;width:0%;}
+.pt{font-size:.8rem;color:var(--mu);text-align:center;margin-bottom:8px;}
 
 /* Result */
-.ri{display:flex;align-items:center;gap:10px;padding:10px 14px;border:1px solid var(--border);border-radius:8px;margin-bottom:8px;font-size:.9rem;background:#fff;flex-wrap:wrap;}
-.ri.ok{border-left:4px solid var(--success);}.ri.err{border-left:4px solid var(--danger);}
-.ril{font-weight:600;flex:1;min-width:120px;}
-.ri a{color:var(--pl);text-decoration:none;font-size:.85rem;}.ri a:hover{text-decoration:underline;}
+.ri{display:flex;align-items:center;gap:9px;padding:9px 12px;border:1px solid var(--bd);border-radius:7px;margin-bottom:6px;font-size:.87rem;background:#fff;flex-wrap:wrap;}
+.ri.ok{border-left:4px solid var(--ok);}.ri.err{border-left:4px solid var(--err);}
+.ril{font-weight:600;flex:1;min-width:100px;}
+.ri a{color:var(--pl);text-decoration:none;font-size:.83rem;}.ri a:hover{text-decoration:underline;}
 
 /* Records */
-.rtable{width:100%;border-collapse:collapse;font-size:.87rem;}
-.rtable th{background:var(--primary);color:#fff;padding:9px 12px;text-align:left;}
-.rtable td{padding:8px 12px;border-bottom:1px solid var(--border);}
-.rtable tr:hover td{background:#eaf4fb;}
-.rtable a{color:var(--pl);text-decoration:none;}
+.rtbl{width:100%;border-collapse:collapse;font-size:.83rem;}
+.rtbl th{background:var(--p);color:#fff;padding:8px 10px;text-align:left;}
+.rtbl td{padding:7px 10px;border-bottom:1px solid var(--bd);}
+.rtbl tr:hover td{background:#eaf4fb;}
+.rtbl a{color:var(--pl);text-decoration:none;}
+
+/* Auth modal */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;z-index:200;}
+.modal-bg.show{display:flex;}
+.modal{background:#fff;border-radius:12px;padding:28px 32px;width:360px;max-width:90vw;box-shadow:0 8px 40px rgba(0,0,0,.2);}
+.modal h3{color:var(--p);margin-bottom:8px;font-size:1rem;}
+.modal p{color:var(--mu);font-size:.83rem;margin-bottom:16px;}
+.modal input{width:100%;border:1px solid var(--bd);border-radius:6px;padding:10px 12px;font-size:.95rem;margin-bottom:12px;}
+.modal input:focus{outline:none;border-color:var(--pl);box-shadow:0 0 0 2px rgba(46,134,193,.15);}
+.modal-btns{display:flex;gap:8px;}
+.modal-err{color:var(--err);font-size:.82rem;margin-bottom:8px;display:none;}
+.modal-err.show{display:block;}
 
 /* Setup */
-.sstep{background:#fff;border:1px solid var(--border);border-radius:8px;padding:16px 20px;margin-bottom:12px;display:flex;gap:16px;}
-.snum{background:var(--primary);color:#fff;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;}
-.sbody h4{font-size:.95rem;font-weight:700;color:var(--primary);margin-bottom:4px;}
-.sbody p{font-size:.85rem;color:var(--muted);line-height:1.6;}
-.sbody code{background:#eee;padding:1px 6px;border-radius:3px;font-size:.83rem;}
-.fid-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px;}
-.cmd-box{background:#1e1e1e;color:#d4d4d4;border-radius:6px;padding:12px;font-family:monospace;font-size:.85rem;margin-top:8px;line-height:1.6;}
+.sstep{background:#fff;border:1px solid var(--bd);border-radius:8px;padding:14px 18px;margin-bottom:10px;display:flex;gap:14px;}
+.snum{background:var(--p);color:#fff;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.9rem;flex-shrink:0;}
+.sbody h4{font-size:.9rem;font-weight:700;color:var(--p);margin-bottom:3px;}
+.sbody p{font-size:.82rem;color:var(--mu);line-height:1.6;}
+.fid-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-top:8px;}
+.cmdbox{background:#1e1e1e;color:#d4d4d4;border-radius:6px;padding:10px 12px;font-family:monospace;font-size:.82rem;margin-top:7px;line-height:1.6;}
 
 /* Overlay */
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.38);display:none;flex-direction:column;align-items:center;justify-content:center;z-index:100;}
 .overlay.show{display:flex;}
-.sp{width:50px;height:50px;border:5px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite;margin-bottom:14px;}
+.sp{width:46px;height:46px;border:4px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite;margin-bottom:12px;}
 @keyframes spin{to{transform:rotate(360deg);}}
-.overlay p{color:#fff;font-size:1rem;font-weight:600;}
-footer{text-align:center;font-size:.78rem;color:var(--muted);padding:20px 0 40px;}
-@media(max-width:620px){.fgrid{grid-template-columns:1fr;}.full{grid-column:1;}.fid-grid{grid-template-columns:1fr;}}
+.overlay p{color:#fff;font-size:.95rem;font-weight:600;}
+footer{text-align:center;font-size:.76rem;color:var(--mu);padding:16px 0 36px;}
+@media(max-width:620px){.fgrid{grid-template-columns:1fr;}.full{grid-column:1;}.fid-grid{grid-template-columns:1fr;}.fmt-grid{grid-template-columns:1fr;}}
 </style>
 </head>
 <body>
 <header>
   <div class="logo">🤖</div>
   <div class="ht"><h1>車城國中 機器人競賽 領據產生器</h1><p>屏東縣立車城國民中學 115 年度 智創機器人競賽 獎金領據</p></div>
-  <div class="vb">v2.1.0</div>
+  <div class="vb">v2.2.0</div>
 </header>
 <main>
 
 <!-- GAS Bar -->
 <div class="gbar">
   <label>🔗 GAS 網址</label>
-  <input type="text" id="gasUrl" placeholder="貼上 GAS Web App URL（https://script.google.com/macros/s/...）"/>
+  <input type="text" id="gasUrl" placeholder="貼上 GAS Web App URL"/>
   <button class="bsm" onclick="connectGAS()">連線測試</button>
   <span class="cbadge" id="connBadge">未連線</span>
+  <button class="bsm" style="background:var(--mu);margin-left:auto" onclick="openAdmin()">🔒 後台</button>
 </div>
 
 <div class="ebanner" id="errBanner">
@@ -158,12 +170,10 @@ footer{text-align:center;font-size:.78rem;color:var(--muted);padding:20px 0 40px
   <div style="flex:1"><div class="et" id="errTitle"></div><div id="errDetail"></div></div>
 </div>
 
-<!-- Tabs -->
+<!-- Tabs（只有前台功能） -->
 <div class="tabs">
   <button class="tbtn active" onclick="sw('single')">📄 單筆填寫</button>
   <button class="tbtn"        onclick="sw('batch')">📋 批次產生</button>
-  <button class="tbtn"        onclick="sw('records');loadRecs()">📊 產生記錄</button>
-  <button class="tbtn"        onclick="sw('setup')">⚙️ 初始設定</button>
 </div>
 
 <!-- ══ 單筆 ══ -->
@@ -174,16 +184,16 @@ footer{text-align:center;font-size:.78rem;color:var(--muted);padding:20px 0 40px
     <div class="fg full"><label>競賽項目 *</label>
       <select id="s-contest">
         <option value="">── 請選擇 ──</option>
-        <option value="奪標攻防賽-國小組">機器人競賽－奪標攻防賽－國小組（優等 400元）</option>
-        <option value="恆春半島認知大作戰-國小組">機器人競賽－恆春半島認知大作戰－國小組（優等 400元）</option>
-        <option value="洋蔥分類大作戰-國小組">機器人競賽－洋蔥分類大作戰－國小組（優等 400元）</option>
-        <option value="奪標攻防賽-國中組">機器人競賽－奪標攻防賽－國中組（優等 400元）</option>
-        <option value="恆春半島認知大作戰-國中組">機器人競賽－恆春半島認知大作戰－國中組（優等 400元）</option>
-        <option value="洋蔥分類大作戰-國中組">機器人競賽－洋蔥分類大作戰－國中組（優等 400元）</option>
+        <option value="奪標攻防賽-國小組">奪標攻防賽－國小組（優等 400元）</option>
+        <option value="恆春半島認知大作戰-國小組">恆春半島認知大作戰－國小組（優等 400元）</option>
+        <option value="洋蔥分類大作戰-國小組">洋蔥分類大作戰－國小組（優等 400元）</option>
+        <option value="奪標攻防賽-國中組">奪標攻防賽－國中組（優等 400元）</option>
+        <option value="恆春半島認知大作戰-國中組">恆春半島認知大作戰－國中組（優等 400元）</option>
+        <option value="洋蔥分類大作戰-國中組">洋蔥分類大作戰－國中組（優等 400元）</option>
       </select>
     </div>
-    <div class="fg"><label>學生隊伍編號 *</label><input type="text" id="s-teamId" placeholder="例：BE09"/></div>
-    <div class="fg"><label>隊伍名稱 *</label><input type="text" id="s-teamName" placeholder="例：溫泉分校01"/></div>
+    <div class="fg"><label>學生隊伍編號 *</label><input type="text" id="s-teamId" placeholder="例：AA01"/></div>
+    <div class="fg"><label>隊伍名稱 *</label><input type="text" id="s-teamName" placeholder="例：測試隊伍01"/></div>
     <div class="fg"><label>學校名稱（本校/分校）*</label><input type="text" id="s-school" placeholder="例：溫泉分校"/></div>
     <div class="fg"><label>具領人姓名 *</label><input type="text" id="s-leaderName" placeholder="指導老師或家長姓名"/></div>
     <div class="fg"><label>身份證字號 *</label><input type="text" id="s-idNumber" placeholder="A123456789" maxlength="10"/></div>
@@ -194,7 +204,7 @@ footer{text-align:center;font-size:.78rem;color:var(--muted);padding:20px 0 40px
     <button class="btn bp" id="singleBtn" onclick="genSingle()">🖨️ 產生領據 DOC</button>
     <button class="btn bo" onclick="clearSingle()">🗑️ 清除</button>
   </div>
-  <div id="single-result" style="margin-top:14px"></div>
+  <div id="single-result" style="margin-top:12px"></div>
 </div>
 </div>
 
@@ -202,273 +212,214 @@ footer{text-align:center;font-size:.78rem;color:var(--muted);padding:20px 0 40px
 <div class="tpanel" id="tab-batch">
 <div class="card">
   <div class="ctitle">📋 批次產生領據</div>
-
-  <!-- 切換：試算表 / 手動輸入 -->
   <div class="btabs">
-    <button class="btbtn active" id="btab-sheets" onclick="swBatch('sheets')">📊 匯入 Google 試算表</button>
-    <button class="btbtn"        id="btab-manual" onclick="swBatch('manual')">✍️ 手動貼上資料</button>
+    <button class="btbtn active" id="btab-sheets" onclick="swB('sheets')">📊 試算表匯入</button>
+    <button class="btbtn"        id="btab-manual" onclick="swB('manual')">✍️ 直接貼上資料</button>
   </div>
 
-  <!-- ─ 試算表匯入 ─ -->
-  <div id="bpanel-sheets">
-    <div class="ibanner">
-      📌 試算表欄位對應：<strong>A=競賽項目&nbsp;&nbsp;B=隊伍編號&nbsp;&nbsp;C=隊伍名稱&nbsp;&nbsp;D=學校&nbsp;&nbsp;E=具領人&nbsp;&nbsp;F=身份證&nbsp;&nbsp;G=戶籍地址</strong>（第一行為標題）
-    </div>
+  <!-- 試算表 -->
+  <div id="bp-sheets">
+    <div class="ibanner">📌 試算表格式（第1行為標題）：A=時間戳記（可空）&nbsp; B=競賽項目&nbsp; C=隊伍編號&nbsp; D=隊伍名稱&nbsp; E=學校&nbsp; F=具領人&nbsp; G=身份證&nbsp; H=地址</div>
     <div class="sheet-box">
-      <p>貼上 Google 試算表網址，自動讀取資料。<br>
-        ⚠️ 試算表需設為「<strong>知道連結的人可以檢視</strong>」，且競賽項目欄需包含「奪標」「恆春」「洋蔥」等關鍵字。</p>
+      <p>貼上 Google 試算表網址，自動讀取資料。試算表需設為「<strong>知道連結的人可以檢視</strong>」。</p>
       <div class="url-row">
         <input type="text" id="sheetsUrl" placeholder="https://docs.google.com/spreadsheets/d/..."/>
-        <button class="bsm" onclick="loadSheets()">📥 載入資料</button>
+        <button class="bsm" onclick="loadSheets()">📥 載入</button>
       </div>
-      <a class="sample-link" href="https://docs.google.com/spreadsheets/d/1example/copy" target="_blank">
-        📋 下載範例試算表格式（複製到自己的 Drive）
-      </a>
     </div>
-    <div id="sheets-wrap" style="display:none">
+    <div id="sw" style="display:none">
       <div class="ca-wrap">
         <input type="checkbox" id="ckAll" onchange="togAll(this.checked)">
         <label for="ckAll" style="cursor:pointer">全選 / 全不選</label>
-        <span class="sel-count" id="selCount"></span>
+        <span class="sc" id="selCnt"></span>
       </div>
       <div style="overflow-x:auto">
         <table class="ptable">
           <thead><tr>
             <th class="cc"><input type="checkbox" id="ckAllH" onchange="togAll(this.checked)"></th>
-            <th>競賽項目（可修改）</th><th>隊伍編號</th><th>隊伍名稱</th><th>學校</th><th>具領人</th><th>身份證</th>
+            <th style="min-width:200px">競賽項目（可修改）</th>
+            <th>隊伍編號</th><th>隊伍名稱</th><th>學校</th><th>具領人</th><th>身份證</th>
           </tr></thead>
-          <tbody id="sheetsTbody"></tbody>
+          <tbody id="sTbody"></tbody>
         </table>
       </div>
-      <div id="sheets-prog" style="display:none;margin-top:14px">
-        <div class="pw"><div class="pb" id="sheetsBar"></div></div>
-        <div class="pt" id="sheetsTxt"></div>
+      <div id="sp" style="display:none;margin-top:12px">
+        <div class="pw"><div class="pb" id="sBar"></div></div>
+        <div class="pt" id="sTxt"></div>
       </div>
       <div class="brow">
-        <button class="btn bsu" id="sheetsGenBtn" onclick="genFromSheets()">🚀 產生勾選的領據</button>
+        <button class="btn bsu" id="sGenBtn" onclick="genSheets()">🚀 產生勾選的領據</button>
         <button class="btn bo" onclick="clearSheets()">🗑️ 清除</button>
       </div>
-      <div id="sheets-result" style="margin-top:14px"></div>
+      <div id="sRes" style="margin-top:12px"></div>
     </div>
   </div>
 
-  <!-- ─ 手動貼上 ─ -->
-  <div id="bpanel-manual" style="display:none">
-    <div class="batch-help">
-      <strong>📋 格式說明：直接從 Excel/試算表複製（Tab 分隔），每行一筆</strong>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px;">
-        <div>
-          <div style="font-weight:600;color:var(--primary);margin-bottom:6px">✅ 格式 A：6 欄（不含競賽代碼）</div>
-          <table>
-            <tr><th>欄位</th><th>內容</th><th>範例</th></tr>
-            <tr><td>第1欄</td><td>隊伍編號</td><td><code>AA01</code></td></tr>
-            <tr><td>第2欄</td><td>隊伍名稱</td><td><code>測試隊伍01</code></td></tr>
-            <tr><td>第3欄</td><td>學校名稱</td><td><code>XX分校</code></td></tr>
-            <tr><td>第4欄</td><td>具領人姓名</td><td><code>王○○</code></td></tr>
-            <tr><td>第5欄</td><td>身份證字號</td><td><code>A123456789</code></td></tr>
-            <tr><td>第6欄</td><td>戶籍地址</td><td><code>屏東縣...</code></td></tr>
+  <!-- 手動 -->
+  <div id="bp-manual" style="display:none">
+    <div class="mbatch">
+      <h4>📋 直接貼上說明：支援 6 欄（無競賽代碼）或 7 欄（含競賽代碼）</h4>
+      <div class="fmt-grid">
+        <div class="fmt-box">
+          <h5>✅ 格式 A：6 欄（從試算表直接複製）</h5>
+          <table class="fmt-table">
+            <tr><th>欄</th><th>內容</th><th>範例</th></tr>
+            <tr><td>1</td><td>隊伍編號</td><td><code>AA01</code></td></tr>
+            <tr><td>2</td><td>隊伍名稱</td><td><code>測試隊伍</code></td></tr>
+            <tr><td>3</td><td>學校名稱</td><td><code>XX分校</code></td></tr>
+            <tr><td>4</td><td>具領人</td><td><code>王○○</code></td></tr>
+            <tr><td>5</td><td>身份證</td><td><code>A123456789</code></td></tr>
+            <tr><td>6</td><td>戶籍地址</td><td><code>屏東縣...</code></td></tr>
           </table>
-          <div style="font-size:.8rem;color:var(--muted);margin-top:4px">⚠ 競賽項目會顯示下拉選單讓你選擇</div>
+          <p style="font-size:.76rem;color:var(--mu);margin-top:5px">⚠ 競賽項目需在預覽中手動選擇</p>
         </div>
-        <div>
-          <div style="font-weight:600;color:var(--primary);margin-bottom:6px">✅ 格式 B：7 欄（含競賽代碼）</div>
-          <table>
-            <tr><th>欄位</th><th>內容</th><th>範例</th></tr>
-            <tr><td>第1欄</td><td>競賽代碼</td><td><code>恆春小</code></td></tr>
-            <tr><td>第2欄</td><td>隊伍編號</td><td><code>AA01</code></td></tr>
-            <tr><td>第3欄</td><td>隊伍名稱</td><td><code>測試隊伍01</code></td></tr>
-            <tr><td>第4欄</td><td>學校名稱</td><td><code>XX分校</code></td></tr>
-            <tr><td>第5欄</td><td>具領人姓名</td><td><code>王○○</code></td></tr>
-            <tr><td>第6欄</td><td>身份證字號</td><td><code>A123456789</code></td></tr>
-            <tr><td>第7欄</td><td>戶籍地址</td><td><code>屏東縣...</code></td></tr>
+        <div class="fmt-box">
+          <h5>✅ 格式 B：7 欄（含競賽代碼）</h5>
+          <table class="fmt-table">
+            <tr><th>欄</th><th>內容</th><th>範例</th></tr>
+            <tr><td>1</td><td>競賽代碼</td><td><code>恆春小</code></td></tr>
+            <tr><td>2</td><td>隊伍編號</td><td><code>AA01</code></td></tr>
+            <tr><td>3</td><td>隊伍名稱</td><td><code>測試隊伍</code></td></tr>
+            <tr><td>4</td><td>學校名稱</td><td><code>XX分校</code></td></tr>
+            <tr><td>5</td><td>具領人</td><td><code>王○○</code></td></tr>
+            <tr><td>6</td><td>身份證</td><td><code>A123456789</code></td></tr>
+            <tr><td>7</td><td>戶籍地址</td><td><code>屏東縣...</code></td></tr>
           </table>
-        </div>
-      </div>
-      <div style="margin-top:10px">
-        <strong>競賽代碼對照：</strong>
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px 20px;margin-top:6px;font-size:.83rem;">
-          <span><code>奪標小</code> → 奪標攻防賽-國小組</span>
-          <span><code>恆春小</code> → 恆春半島認知大作戰-國小組</span>
-          <span><code>洋蔥小</code> → 洋蔥分類大作戰-國小組</span>
-          <span><code>奪標中</code> → 奪標攻防賽-國中組</span>
-          <span><code>恆春中</code> → 恆春半島認知大作戰-國中組</span>
-          <span><code>洋蔥中</code> → 洋蔥分類大作戰-國中組</span>
-        </div>
-        <div style="margin-top:8px;background:#f0f7ff;border-radius:6px;padding:8px 12px;font-size:.83rem;">
-          💡 也可直接輸入完整名稱，如 <code>恆春半島認知大作戰-國小組</code>
+          <div style="margin-top:5px;font-size:.76rem">代碼：<code>奪標小/恆春小/洋蔥小/奪標中/恆春中/洋蔥中</code></div>
         </div>
       </div>
     </div>
-    <textarea class="binput" id="manualInput" placeholder="直接貼上試算表資料（6欄，無競賽代碼，競賽項目稍後選擇）：
+    <textarea class="binput" id="mInput" placeholder="直接從試算表複製貼上（Tab 分隔）：
 AA01	測試隊伍01	XX分校	王○○	A123456789	屏東縣車城鄉○○路1號
-BB02	測試隊伍02	YY分校	李○○	B234567890	屏東縣車城鄉○○路2號
-
-或貼上7欄（第1欄加競賽代碼）：
-恆春小	AA01	測試隊伍01	XX分校	王○○	A123456789	屏東縣車城鄉○○路1號
-洋蔥小	BB02	測試隊伍02	YY分校	李○○	B234567890	屏東縣車城鄉○○路2號" oninput="parseManual()"></textarea>
-    <div id="manual-preview" style="margin-top:10px"></div>
-    <div id="manual-prog" style="display:none;margin-top:14px">
-      <div class="pw"><div class="pb" id="manualBar"></div></div>
-      <div class="pt" id="manualTxt"></div>
+BB02	測試隊伍02	YY分校	李○○	B234567890	屏東縣車城鄉○○路2號" oninput="parseM()"></textarea>
+    <div id="mPrev" style="margin-top:8px"></div>
+    <div id="mp" style="display:none;margin-top:12px">
+      <div class="pw"><div class="pb" id="mBar"></div></div>
+      <div class="pt" id="mTxt"></div>
     </div>
     <div class="brow">
-      <button class="btn ba" id="manualGenBtn" onclick="genFromManual()">🚀 批次產生全部領據</button>
-      <button class="btn bo" onclick="clearManual()">🗑️ 清除</button>
+      <button class="btn ba" id="mGenBtn" onclick="genManual()">🚀 批次產生</button>
+      <button class="btn bo" onclick="clearM()">🗑️ 清除</button>
     </div>
-    <div id="manual-result" style="margin-top:14px"></div>
-  </div>
-</div>
-</div>
-
-<!-- ══ 記錄 ══ -->
-<div class="tpanel" id="tab-records">
-<div class="card">
-  <div class="ctitle">📊 產生記錄</div>
-  <div style="margin-bottom:14px"><button class="btn bo" onclick="loadRecs()">🔄 重新載入</button></div>
-  <div id="recs-content"><p style="color:var(--muted);text-align:center;padding:30px 0">點擊「重新載入」查看記錄</p></div>
-</div>
-</div>
-
-<!-- ══ 設定 ══ -->
-<div class="tpanel" id="tab-setup">
-<div class="card">
-  <div class="ctitle">⚙️ 初始設定精靈</div>
-  <div class="ibanner">ℹ️ 第一次使用需完成以下設定，之後不需要重複設定。</div>
-
-  <div class="sstep">
-    <div class="snum">1</div>
-    <div class="sbody">
-      <h4>執行 setupDatabase（只需一次）</h4>
-      <p>在 GAS 編輯器上方函式選單選 <code>setupDatabase</code>，點執行，初始化記錄工作表。</p>
-    </div>
-  </div>
-
-  <div class="sstep">
-    <div class="snum">2</div>
-    <div class="sbody">
-      <h4>上傳三個 DOC 模板到 Google Drive</h4>
-      <p>把下列三個原始 DOC 上傳到你的 Google Drive：<br>
-        <code>奪標-國小組.doc</code>&nbsp;&nbsp;<code>恆春-國小組.doc</code>&nbsp;&nbsp;<code>洋蔥-國小組.doc</code></p>
-    </div>
-  </div>
-
-  <div class="sstep">
-    <div class="snum">3</div>
-    <div class="sbody">
-      <h4>取得每個 DOC 的 File ID</h4>
-      <p>在 Drive 右鍵每個 DOC → 取得連結 → 複製<br>
-        連結格式：<code>https://drive.google.com/file/d/<strong style="color:var(--danger)">這段是FileID</strong>/view</code></p>
-    </div>
-  </div>
-
-  <div class="sstep">
-    <div class="snum">4</div>
-    <div class="sbody">
-      <h4>填入 File ID，完成設定</h4>
-      <div class="fid-grid">
-        <div class="fg"><label>奪標 DOC FileID</label><input type="text" id="id-db" placeholder="1BcDe..." oninput="updCmd()"/></div>
-        <div class="fg"><label>恆春 DOC FileID</label><input type="text" id="id-hc" placeholder="2FgHi..." oninput="updCmd()"/></div>
-        <div class="fg"><label>洋蔥 DOC FileID</label><input type="text" id="id-yc" placeholder="3JkLm..." oninput="updCmd()"/></div>
-      </div>
-      <div class="cmd-box" id="cmdBox">
-        setTemplates(<br>
-        &nbsp;&nbsp;"<span style="color:#ce9178" id="cmd-db">奪標 FileID</span>",<br>
-        &nbsp;&nbsp;"<span style="color:#ce9178" id="cmd-hc">恆春 FileID</span>",<br>
-        &nbsp;&nbsp;"<span style="color:#ce9178" id="cmd-yc">洋蔥 FileID</span>"<br>
-        )
-      </div>
-      <div class="brow">
-        <button class="btn bp" onclick="runSetTpl()">▶ 自動執行 setTemplates</button>
-        <button class="btn bo" onclick="copyCmd()">📋 複製指令</button>
-      </div>
-      <div id="setup-res" style="margin-top:10px"></div>
-    </div>
-  </div>
-
-  <div class="sstep">
-    <div class="snum">5</div>
-    <div class="sbody">
-      <h4>驗證設定完成</h4>
-      <p>前往「單筆填寫」試產生一筆，成功代表設定完成！</p>
-      <div class="brow" style="margin-top:8px"><button class="btn bo" onclick="sw('single')">→ 前往測試</button></div>
-    </div>
+    <div id="mRes" style="margin-top:12px"></div>
   </div>
 </div>
 </div>
 
 </main>
-<footer>車城國小資訊老師 @ 機器人競賽領據系統 v2.1.0</footer>
+<footer>車城國小資訊老師 @ 機器人競賽領據系統 v2.2.0</footer>
 
+<!-- ══ 後台 Modal ══ -->
+<div class="modal-bg" id="adminModal">
+  <div class="modal">
+    <h3>🔒 後台登入</h3>
+    <p>請輸入後台密碼（密碼在試算表 Config 工作表 B2 設定）</p>
+    <div class="modal-err" id="authErr">密碼錯誤，請重試</div>
+    <input type="password" id="adminPw" placeholder="輸入密碼" onkeydown="if(event.key==='Enter')doLogin()"/>
+    <div class="modal-btns">
+      <button class="btn bp" style="flex:1" onclick="doLogin()">登入</button>
+      <button class="btn bo" onclick="closeAdmin()">取消</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 後台面板 ══ -->
+<div class="modal-bg" id="adminPanel">
+  <div class="modal" style="width:700px;max-width:95vw;max-height:90vh;overflow-y:auto">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+      <h3>🛠 後台管理</h3>
+      <button class="btn bo" style="padding:5px 12px;min-height:0" onclick="closePanel()">✕ 關閉</button>
+    </div>
+
+    <!-- 初始設定 -->
+    <div style="font-weight:700;color:var(--p);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--bd)">⚙️ 初始設定（模板 File ID）</div>
+    <div class="ibanner" style="margin-bottom:10px">三個原始 DOC 上傳到 Google Drive → 右鍵取得連結 → 複製 URL 中 /d/ 後面的 FileID</div>
+    <div class="fid-grid" style="margin-bottom:10px">
+      <div class="fg"><label>奪標 DOC FileID</label><input type="text" id="id-db" placeholder="1BcDe..." oninput="updCmd()"/></div>
+      <div class="fg"><label>恆春 DOC FileID</label><input type="text" id="id-hc" placeholder="2FgHi..." oninput="updCmd()"/></div>
+      <div class="fg"><label>洋蔥 DOC FileID</label><input type="text" id="id-yc" placeholder="3JkLm..." oninput="updCmd()"/></div>
+    </div>
+    <div class="cmdbox" id="cmdBox">
+      setTemplates(<br>
+      &nbsp;&nbsp;"<span style="color:#ce9178" id="cmd-db">奪標 FileID</span>",<br>
+      &nbsp;&nbsp;"<span style="color:#ce9178" id="cmd-hc">恆春 FileID</span>",<br>
+      &nbsp;&nbsp;"<span style="color:#ce9178" id="cmd-yc">洋蔥 FileID</span>"<br>
+      )
+    </div>
+    <div class="brow" style="margin-bottom:16px">
+      <button class="btn bp" onclick="runSetTpl()">▶ 套用設定</button>
+      <button class="btn bo" onclick="copyCmd()">📋 複製指令</button>
+    </div>
+    <div id="setup-res" style="margin-bottom:12px"></div>
+
+    <!-- 產生記錄 -->
+    <div style="font-weight:700;color:var(--p);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--bd)">📊 產生記錄</div>
+    <div style="margin-bottom:10px">
+      <button class="btn bo" onclick="loadRecs()">🔄 重新載入</button>
+    </div>
+    <div id="recsContent"><p style="color:var(--mu);font-size:.85rem">點擊「重新載入」查看記錄</p></div>
+  </div>
+</div>
+
+<!-- Overlay -->
 <div class="overlay" id="overlay"><div class="sp"></div><p id="ovMsg">產生中…</p></div>
 
 <script>
-// ═══ 設定 ═══════════════════════════════════════════════════
-const DEFAULT_GAS_URL = '';  // ← 部署後填入 GAS URL
+// ═══ 工具（最先定義）═════════════════════════════════════════
+const el=id=>document.getElementById(id);
+const v=id=>el(id).value.trim();
+const delay=ms=>new Promise(r=>setTimeout(r,ms));
 
-// 競賽識別：盡量寬鬆比對
-const CONTEST_OPTIONS = [
-  '奪標攻防賽-國小組',
-  '恆春半島認知大作戰-國小組',
-  '洋蔥分類大作戰-國小組',
-  '奪標攻防賽-國中組',
-  '恆春半島認知大作戰-國中組',
-  '洋蔥分類大作戰-國中組',
+// ═══ 設定 ════════════════════════════════════════════════════
+const DEFAULT_GAS = '';  // ← 填入 GAS URL
+
+const CONTESTS = [
+  '奪標攻防賽-國小組','恆春半島認知大作戰-國小組','洋蔥分類大作戰-國小組',
+  '奪標攻防賽-國中組','恆春半島認知大作戰-國中組','洋蔥分類大作戰-國中組',
 ];
-// 手動代碼對照
 const CODE_MAP = {
   '奪標小':'奪標攻防賽-國小組','恆春小':'恆春半島認知大作戰-國小組','洋蔥小':'洋蔥分類大作戰-國小組',
   '奪標中':'奪標攻防賽-國中組','恆春中':'恆春半島認知大作戰-國中組','洋蔥中':'洋蔥分類大作戰-國中組',
 };
 
-// 模糊比對競賽名稱
 function resolveContest(raw) {
   if (!raw) return null;
   const s = String(raw).trim();
-  if (CONTEST_OPTIONS.includes(s)) return s;
+  if (CONTESTS.includes(s)) return s;
   if (CODE_MAP[s]) return CODE_MAP[s];
-  // 模糊：包含關鍵字
-  for (const opt of CONTEST_OPTIONS) {
-    const short = opt.replace('-國小組','').replace('-國中組','');
-    if (s.includes(short)) {
-      // 判斷國小/國中
-      const grade = s.includes('國中') ? '國中組' : '國小組';
-      return short + '-' + grade;
-    }
+  for (const opt of CONTESTS) {
+    const k = opt.replace(/-國[小中]組$/,'');
+    if (s.includes(k)) return k + '-' + (s.includes('國中')?'國中組':'國小組');
   }
   return null;
 }
 
-// ═══ 工具（必須最先定義）════════════════════════════════════
-const el=id=>document.getElementById(id);
-const v=id=>el(id).value.trim();
-const delay=ms=>new Promise(r=>setTimeout(r,ms));
-
-// ═══ 狀態 ═══════════════════════════════════════════════════
-let gasUrl='', connected=false, sheetsData=[], parsedManual=[];
+// ═══ 狀態 ════════════════════════════════════════════════════
+let gasUrl='', connected=false, sheetsData=[], parsedM=[], adminPw='';
 
 // ═══ 初始化 ══════════════════════════════════════════════════
 window.onload = () => {
   const saved = localStorage.getItem('gasUrl');
-  gasUrl = (saved&&saved.trim()) ? saved.trim()
-         : (DEFAULT_GAS_URL.trim()) ? DEFAULT_GAS_URL.trim() : '';
+  gasUrl = (saved&&saved.trim()) ? saved.trim() : (DEFAULT_GAS.trim() ? DEFAULT_GAS.trim() : '');
   if (gasUrl) { el('gasUrl').value=gasUrl; connectGAS(true); }
   el('gasUrl').addEventListener('input', () => { gasUrl=el('gasUrl').value.trim(); localStorage.setItem('gasUrl',gasUrl); });
 };
 
 // ═══ UI ══════════════════════════════════════════════════════
-function sw(name) {
-  const ns=['single','batch','records','setup'];
-  document.querySelectorAll('.tbtn').forEach((b,i)=>b.classList.toggle('active',ns[i]===name));
-  document.querySelectorAll('.tpanel').forEach(p=>p.classList.toggle('active',p.id==='tab-'+name));
+function sw(n){
+  ['single','batch'].forEach((x,i)=>{
+    document.querySelectorAll('.tbtn')[i].classList.toggle('active',x===n);
+    el('tab-'+x).classList.toggle('active',x===n);
+  });
 }
-function swBatch(mode) {
-  el('btab-sheets').classList.toggle('active',mode==='sheets');
-  el('btab-manual').classList.toggle('active',mode==='manual');
-  el('bpanel-sheets').style.display = mode==='sheets'?'':'none';
-  el('bpanel-manual').style.display = mode==='manual'?'':'none';
+function swB(m){
+  el('btab-sheets').classList.toggle('active',m==='sheets');
+  el('btab-manual').classList.toggle('active',m==='manual');
+  el('bp-sheets').style.display=m==='sheets'?'':'none';
+  el('bp-manual').style.display=m==='manual'?'':'none';
 }
 
-// ═══ GAS ═════════════════════════════════════════════════════
+// ═══ GAS ══════════════════════════════════════════════════════
 function callJSONP(params, cb) {
   const n='cb_'+Date.now(), s=document.createElement('script');
   window[n]=d=>{delete window[n];s.parentNode&&s.parentNode.removeChild(s);cb(null,d);};
@@ -488,39 +439,30 @@ function connectGAS(silent) {
   callJSONP({action:'getConfig'},(err,data)=>{
     if(err||!data||!data.ok){
       b.className='cbadge err'; b.textContent='❌ 連線失敗';
-      if(!silent) showErr('無法連線 GAS','請確認：① URL 正確 ② 部署執行身分=我 ③ 存取=任何人');
+      if(!silent)showErr('無法連線 GAS','確認：① URL 正確 ② 執行身分=我 ③ 存取=任何人');
     } else {
-      b.className='cbadge ok'; b.textContent='✅ 已連線';
-      connected=true; hideErr();
+      b.className='cbadge ok'; b.textContent='✅ 已連線'; connected=true; hideErr();
     }
   });
 }
 
-// ═══ Error ═══════════════════════════════════════════════════
-function showErr(title, detail, steps) {
-  const b=el('errBanner');
-  el('errTitle').textContent=title;
-  const d=el('errDetail');
-  if(steps&&steps.length) {
-    d.innerHTML=(detail?`<p style="margin-bottom:4px">${detail}</p>`:'')+
-      '<ol>'+steps.map(s=>`<li>${s}</li>`).join('')+'</ol>';
-  } else { d.textContent=detail||''; }
-  b.classList.add('show');
+// ═══ 錯誤 ════════════════════════════════════════════════════
+function showErr(t, d, steps) {
+  el('errTitle').textContent=t;
+  const dd=el('errDetail');
+  if(steps&&steps.length) dd.innerHTML=(d?`<p style="margin-bottom:3px">${d}</p>`:'')+`<ol>${steps.map(s=>`<li>${s}</li>`).join('')}</ol>`;
+  else dd.textContent=d||'';
+  el('errBanner').classList.add('show');
 }
 function hideErr(){el('errBanner').classList.remove('show');}
-function smartErr(err) {
-  const m=String(err?.error||err?.message||err||'');
-  if(m.includes('模板 ID')||m.includes('setTemplates')) {
-    showErr('找不到模板 ID，尚未完成初始設定','',
-      ['切換到「⚙️ 初始設定」頁面',
-       '把三個 DOC 上傳 Google Drive，取得 File ID',
-       '填入 File ID 後點「自動執行 setTemplates」',
-       '完成後回來重新產生']);
-  } else if(m.includes('無法讀取試算表')) {
-    showErr('無法讀取試算表',m,
-      ['確認試算表已設為「知道連結的人可以檢視」（不限制存取）',
-       '確認網址正確（需包含 /spreadsheets/d/...）']);
-  } else { showErr('操作失敗',m); }
+function smartErr(e) {
+  const m=String(e?.error||e?.message||e||'');
+  if(m.includes('模板 ID')||m.includes('setTemplates'))
+    showErr('找不到模板 ID','',[`點右上角「🔒 後台」登入`,`填入三個 DOC 的 File ID 後點「套用設定」`]);
+  else if(m.includes('ContentType')||m.includes('contentType')||m.includes('zip'))
+    showErr('DOCX 產生失敗','Blob ContentType 錯誤，請確認 GAS 已更新為 v3.3 版本並重新部署。');
+  else if(m.includes('密碼')) showErr('密碼錯誤','','');
+  else showErr('操作失敗',m);
 }
 
 // ═══ 單筆 ════════════════════════════════════════════════════
@@ -538,212 +480,195 @@ async function genSingle() {
   } catch(e){hideOvl();el('singleBtn').disabled=false;smartErr(e);}
 }
 function clearSingle(){
-  ['s-contest','s-teamId','s-teamName','s-school','s-leaderName','s-idNumber','s-address'].forEach(id=>el(id).value='');
+  ['s-contest','s-teamId','s-teamName','s-school','s-leaderName','s-idNumber','s-address'].forEach(x=>el(x).value='');
   el('single-result').innerHTML=''; hideErr();
 }
 
-// ═══ 試算表匯入 ═══════════════════════════════════════════════
-async function loadSheets() {
+// ═══ 試算表 ══════════════════════════════════════════════════
+function loadSheets() {
   if(!chkConn())return;
   const url=el('sheetsUrl').value.trim();
   if(!url){showErr('請輸入試算表網址','');return;}
   const m=url.match(/\/spreadsheets\/d\/([^/]+)/);
   if(!m){showErr('網址格式不正確','請貼上完整的 Google 試算表網址');return;}
-  const ssId=m[1];
   hideErr(); showOvl('讀取試算表中…');
-  callJSONP({action:'getSheetData',ssId},(err,data)=>{
+  callJSONP({action:'getSheetData',ssId:m[1]},(err,data)=>{
     hideOvl();
     if(err||!data||!data.ok){smartErr(err||data);return;}
-    sheetsData=data.rows;
-    renderSheets();
+    sheetsData=data.rows; renderSheets();
   });
 }
 function renderSheets() {
-  const body=el('sheetsTbody'); body.innerHTML='';
+  const tb=el('sTbody'); tb.innerHTML='';
   sheetsData.forEach((row,i)=>{
-    const resolved=resolveContest(row.contest);
+    const res=resolveContest(row.contest);
+    const def=res||CONTESTS[0];
+    const opts=CONTESTS.map(o=>`<option value="${o}" ${def===o?'selected':''}>${o}</option>`).join('');
     const tr=document.createElement('tr');
-    // 所有行都可勾選，競賽項目改為下拉選單，預設最接近的選項
-    const defaultContest = resolved || CONTEST_OPTIONS[0];
-    const selOpts = CONTEST_OPTIONS.map(o=>`<option value="${o}" ${defaultContest===o?'selected':''}>${o}</option>`).join('');
     tr.innerHTML=
-      `<td class="cc"><input type="checkbox" class="rck" data-i="${i}" checked onchange="updCount()"></td>`+
-      `<td><select class="ct-select" data-i="${i}">${selOpts}</select>`+
-        (!resolved?` <span class="badge warn" title="原始值：${row.contest||'空'}">⚠ 請確認</span>`:``)+'</td>'+
+      `<td class="cc"><input type="checkbox" class="rck" data-i="${i}" checked onchange="updCnt()"></td>`+
+      `<td><select class="ct-sel" data-i="${i}">${opts}</select>${!res?` <span class="badge warn">⚠請確認</span>`:''}</td>`+
       `<td>${row.teamId}</td><td>${row.teamName}</td><td>${row.school}</td>`+
       `<td>${row.leaderName}</td><td>${row.idNumber}</td>`;
-    body.appendChild(tr);
+    tb.appendChild(tr);
   });
-  el('sheets-wrap').style.display='block';
-  updCount();
+  el('sw').style.display='block'; updCnt();
 }
-function togAll(c){document.querySelectorAll('.rck').forEach(x=>x.checked=c);el('ckAll').checked=c;el('ckAllH').checked=c;updCount();}
-function updCount(){
-  const total=document.querySelectorAll('.rck').length;
-  const sel=document.querySelectorAll('.rck:checked').length;
-  el('selCount').textContent=`已選 ${sel} / ${total} 筆`;
+function togAll(c){document.querySelectorAll('.rck').forEach(x=>x.checked=c);el('ckAll').checked=c;el('ckAllH').checked=c;updCnt();}
+function updCnt(){
+  const t=document.querySelectorAll('.rck').length, s=document.querySelectorAll('.rck:checked').length;
+  el('selCnt').textContent=`已選 ${s}/${t} 筆`;
 }
-async function genFromSheets() {
+async function genSheets() {
   if(!chkConn())return;
   const rows=[];
   document.querySelectorAll('.rck:checked').forEach(ck=>{
     const i=parseInt(ck.dataset.i);
-    const contest=document.querySelector(`.ct-select[data-i="${i}"]`).value;
-    rows.push({...sheetsData[i],contest});
+    rows.push({...sheetsData[i],contest:document.querySelector(`.ct-sel[data-i="${i}"]`).value});
   });
-  if(!rows.length){showErr('請至少勾選一筆資料','');return;}
-  await batchGenerate(rows,'sheets');
+  if(!rows.length){showErr('請勾選至少一筆','');return;}
+  await batchGen(rows,'sheets');
 }
-function clearSheets(){el('sheetsUrl').value='';el('sheets-wrap').style.display='none';sheetsData=[];el('sheets-result').innerHTML='';}
+function clearSheets(){el('sheetsUrl').value='';el('sw').style.display='none';sheetsData=[];el('sRes').innerHTML='';}
 
-// ═══ 手動批次 ═════════════════════════════════════════════════
-function parseManual() {
-  const lines=el('manualInput').value.split('\n').map(l=>l.trim()).filter(Boolean);
-  parsedManual=[];
-  lines.forEach((line,i)=>{
-    const cols=line.includes('\t')?line.split('\t'):line.split(',');
-    const c=cols.map(x=>x.trim());
-
-    // 支援兩種格式：
-    // 7欄：競賽代碼 隊伍編號 隊伍名稱 學校 具領人 身份證 地址
-    // 6欄（無競賽代碼）：隊伍編號 隊伍名稱 學校 具領人 身份證 地址
-    if(c.length<6){parsedManual.push({err:`第${i+1}行：欄位不足（至少需要6欄，目前${c.length}欄）`});return;}
-
-    let contest='', teamId, teamName, school, leaderName, idNumber, address;
-    if(c.length>=7){
-      const maybeContest=resolveContest(c[0]);
-      if(maybeContest){
-        // 7欄有競賽代碼
-        [,teamId,teamName,school,leaderName,idNumber,...rest]=c;
-        contest=maybeContest; address=rest.join(',').trim();
-      } else {
-        // 7欄但第1欄不是競賽代碼，當6欄+1欄地址
-        [teamId,teamName,school,leaderName,idNumber,...rest]=c;
-        address=rest.join(',').trim(); contest=''; // 需要手動選
-      }
+// ═══ 手動批次 ════════════════════════════════════════════════
+function parseM() {
+  const lines=el('mInput').value.split('\n').map(l=>l.trim()).filter(Boolean);
+  parsedM=[];
+  lines.forEach((line,li)=>{
+    const c=line.includes('\t')?line.split('\t'):line.split(',');
+    const cols=c.map(x=>x.trim());
+    if(cols.length<6){parsedM.push({err:`第${li+1}行欄位不足（${cols.length}欄，需至少6欄）`});return;}
+    let contest='',teamId,teamName,school,leaderName,idNumber,address;
+    if(cols.length>=7 && resolveContest(cols[0])){
+      [,teamId,teamName,school,leaderName,idNumber,...rest]=cols;
+      contest=resolveContest(cols[0]); address=rest.join(',').trim();
     } else {
-      // 6欄無競賽代碼
-      [teamId,teamName,school,leaderName,idNumber,address]=c;
-      contest='';
+      [teamId,teamName,school,leaderName,idNumber,...rest]=cols;
+      address=rest.join(',').trim();
     }
-    parsedManual.push({contest, teamId, teamName, school, leaderName, idNumber, address,
-                       needContest:!contest, lineIdx:i});
+    parsedM.push({contest,teamId,teamName,school,leaderName,idNumber,address,needContest:!contest,idx:li});
   });
-  renderManualPreview();
+  renderMP();
 }
-function renderManualPreview() {
-  const div=el('manual-preview');
-  if(!parsedManual.length){div.innerHTML='';return;}
-  const valid=parsedManual.filter(r=>!r.err).length;
-  const needSelect=parsedManual.filter(r=>!r.err&&r.needContest).length;
-  div.innerHTML=
-    `<p style="font-size:.85rem;color:var(--muted);margin-bottom:8px">解析結果：共 ${parsedManual.length} 行，有效 <strong style="color:var(--success)">${valid}</strong> 筆`+
-    (needSelect?`，<strong style="color:var(--warn)">⚠ ${needSelect} 筆需選擇競賽項目</strong>`:'')+'</p>'+
-    parsedManual.map((r,idx)=>{
-      if(r.err) return `<div style="padding:6px 12px;border:1px solid #f0c0c0;border-radius:6px;margin-bottom:5px;font-size:.83rem;color:var(--danger);background:#fff9f9">❌ ${r.err}</div>`;
-      const selOpts=CONTEST_OPTIONS.map(o=>`<option value="${o}" ${r.contest===o?'selected':''}>${o}</option>`).join('');
-      return `<div style="padding:8px 12px;border:1px solid ${r.needContest?'var(--warn)':'var(--border)'};border-radius:6px;margin-bottom:5px;background:#f9f9f9;display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
-        <select class="ct-select mct" data-idx="${idx}" style="min-width:220px">${selOpts}</select>
-        ${r.needContest?`<span class="badge warn">⚠ 請選擇</span>`:`<span class="badge">${r.contest.slice(0,4)}</span>`}
-        <span><strong>${r.leaderName}</strong></span>
-        <span style="color:var(--muted);font-size:.82rem">${r.teamId} | ${r.teamName} | ${r.school}</span>
+function renderMP() {
+  const d=el('mPrev');
+  if(!parsedM.length){d.innerHTML='';return;}
+  const valid=parsedM.filter(r=>!r.err).length;
+  const needSel=parsedM.filter(r=>!r.err&&r.needContest).length;
+  d.innerHTML=`<p style="font-size:.82rem;color:var(--mu);margin-bottom:7px">解析：${parsedM.length} 行，有效 <strong style="color:var(--ok)">${valid}</strong> 筆`+
+    (needSel?`，<strong style="color:var(--warn)">⚠ ${needSel} 筆需選擇競賽項目</strong>`:'')+`</p>`+
+    parsedM.map((r,i)=>{
+      if(r.err) return `<div style="padding:5px 10px;border:1px solid #f0c0c0;border-radius:5px;margin-bottom:4px;font-size:.8rem;color:var(--err);background:#fff9f9">❌ ${r.err}</div>`;
+      const opts=CONTESTS.map(o=>`<option value="${o}" ${r.contest===o?'selected':''}>${o}</option>`).join('');
+      return `<div style="padding:7px 10px;border:1px solid ${r.needContest?'var(--warn)':'var(--bd)'};border-radius:5px;margin-bottom:4px;background:#f9f9f9;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+        <select class="ct-sel mct" data-mi="${i}" style="min-width:190px">${opts}</select>
+        ${r.needContest?`<span class="badge warn">⚠</span>`:`<span class="badge">${r.contest.slice(0,4)}</span>`}
+        <strong>${r.leaderName}</strong>
+        <span style="color:var(--mu);font-size:.8rem">${r.teamId} | ${r.teamName}</span>
       </div>`;
     }).join('');
 }
-async function genFromManual() {
+async function genManual() {
   if(!chkConn())return;
-  const valid=parsedManual.filter(r=>!r.err);
-  if(!valid.length){showErr('沒有有效資料，請先貼上並確認格式','');return;}
-  // 從下拉選單讀取每行的競賽選擇
-  const rows=valid.map((r,i)=>{
-    const sel=document.querySelector(`.mct[data-idx="${parsedManual.indexOf(r)}"]`);
-    const contest=sel?sel.value:r.contest;
-    return {...r, contest};
+  const rows=parsedM.filter(r=>!r.err).map((r,i)=>{
+    const sel=document.querySelector(`.mct[data-mi="${parsedM.indexOf(r)}"]`);
+    return {...r, contest:sel?sel.value:r.contest};
   });
-  if(parsedManual.some(r=>r.err)&&!confirm(`有 ${parsedManual.filter(r=>r.err).length} 行有錯誤，略過後繼續產生 ${rows.length} 筆？`))return;
-  await batchGenerate(rows,'manual');
+  if(!rows.length){showErr('沒有有效資料','');return;}
+  await batchGen(rows,'manual');
 }
-function clearManual(){el('manualInput').value='';el('manual-preview').innerHTML='';parsedManual=[];el('manual-result').innerHTML='';}
+function clearM(){el('mInput').value='';el('mPrev').innerHTML='';parsedM=[];el('mRes').innerHTML='';}
 
-// ═══ 共用批次產生 ══════════════════════════════════════════════
-async function batchGenerate(rows, mode) {
-  const barId=mode==='sheets'?'sheetsBar':'manualBar';
-  const txtId=mode==='sheets'?'sheetsTxt':'manualTxt';
-  const progId=mode==='sheets'?'sheets-prog':'manual-prog';
-  const resId=mode==='sheets'?'sheets-result':'manual-result';
-  const btnId=mode==='sheets'?'sheetsGenBtn':'manualGenBtn';
-
-  el(progId).style.display='block';
-  el(btnId).disabled=true;
-  el(resId).innerHTML='';
-  hideErr();
-
+// ═══ 共用批次 ════════════════════════════════════════════════
+async function batchGen(rows, mode) {
+  const [bar,txt,prog,res,btn]=mode==='sheets'
+    ?['sBar','sTxt','sp','sRes','sGenBtn']
+    :['mBar','mTxt','mp','mRes','mGenBtn'];
+  el(prog).style.display='block'; el(btn).disabled=true; el(res).innerHTML=''; hideErr();
   for(let i=0;i<rows.length;i++){
-    const row=rows[i];
-    el(txtId).textContent=`產生中 ${i+1}/${rows.length}：${row.leaderName}（${row.contest}）`;
-    el(barId).style.width=Math.round(i/rows.length*100)+'%';
+    const r=rows[i];
+    el(txt).textContent=`產生中 ${i+1}/${rows.length}：${r.leaderName}（${r.contest}）`;
+    el(bar).style.width=Math.round(i/rows.length*100)+'%';
     try {
-      const r=await callPOST({action:'generateDoc',...row});
-      if(r.ok) el(resId).innerHTML+=rHTML(`✅ ${row.leaderName}（${row.teamId}）`,r.docUrl,r.viewUrl);
-      else el(resId).innerHTML+=`<div class="ri err"><span class="ril">❌ ${row.leaderName}</span><span>${r.error||'失敗'}</span></div>`;
-    } catch(e) {
-      el(resId).innerHTML+=`<div class="ri err"><span class="ril">❌ ${row.leaderName}</span><span>${e.message}</span></div>`;
-    }
+      const ret=await callPOST({action:'generateDoc',...r});
+      if(ret.ok) el(res).innerHTML+=rHTML(`✅ ${r.leaderName}（${r.teamId}）`,ret.docUrl,ret.viewUrl);
+      else el(res).innerHTML+=`<div class="ri err"><span class="ril">❌ ${r.leaderName}</span><span>${ret.error||'失敗'}</span></div>`;
+    } catch(e){el(res).innerHTML+=`<div class="ri err"><span class="ril">❌ ${r.leaderName}</span><span>${e.message}</span></div>`;}
     await delay(800);
   }
-  el(barId).style.width='100%';
-  el(txtId).textContent=`✅ 完成！共產生 ${rows.length} 份領據`;
-  el(btnId).disabled=false;
+  el(bar).style.width='100%';
+  el(txt).textContent=`✅ 完成！共產生 ${rows.length} 份領據`;
+  el(btn).disabled=false;
 }
 
-// ═══ 記錄 ════════════════════════════════════════════════════
-function loadRecs() {
-  if(!chkConn())return;
-  const d=el('recs-content');
-  d.innerHTML='<p style="color:var(--muted);text-align:center;padding:20px">載入中…</p>';
-  callJSONP({action:'getRecords'},(err,data)=>{
-    if(err||!data.ok){d.innerHTML=`<p style="color:var(--danger)">載入失敗：${err?.message||data?.error}</p>`;return;}
-    if(!data.records.length){d.innerHTML='<p style="color:var(--muted);text-align:center;padding:30px">尚無記錄</p>';return;}
-    d.innerHTML='<div style="overflow-x:auto"><table class="rtable"><thead><tr><th>時間</th><th>競賽</th><th>編號</th><th>隊伍</th><th>具領人</th><th>學校</th><th>文件</th></tr></thead><tbody>'+
-      data.records.map(r=>`<tr><td>${r.timestamp}</td><td>${r.contest}</td><td>${r.teamId}</td><td>${r.teamName}</td><td>${r.leaderName}</td><td>${r.school}</td><td>${r.docUrl?`<a href="${r.docUrl}" target="_blank">⬇️ DOCX</a>`:'-'}</td></tr>`).join('')+
-      '</tbody></table></div>';
+// ═══ 後台（密碼保護）════════════════════════════════════════
+function openAdmin(){el('adminPw').value='';el('authErr').classList.remove('show');el('adminModal').classList.add('show');setTimeout(()=>el('adminPw').focus(),100);}
+function closeAdmin(){el('adminModal').classList.remove('show');}
+function closePanel(){el('adminPanel').classList.remove('show');}
+function doLogin(){
+  const pw=el('adminPw').value;
+  if(!chkConn()){closeAdmin();return;}
+  callJSONP({action:'getRecords',pw},(err,data)=>{
+    if(err||(data&&data.needAuth)){el('authErr').classList.add('show');return;}
+    if(data&&data.ok){
+      adminPw=pw;
+      closeAdmin();
+      el('adminPanel').classList.add('show');
+      renderRecs(data.records);
+      // 載入已存的 FileID
+      loadStoredIds();
+    } else {el('authErr').classList.add('show');}
   });
 }
+function loadStoredIds(){/* FileID 只存在 GAS，無法直接讀，留空讓用戶重填 */}
 
-// ═══ 設定精靈 ════════════════════════════════════════════════
+function loadRecs(){
+  if(!adminPw){showErr('請先登入後台','');return;}
+  callJSONP({action:'getRecords',pw:adminPw},(err,data)=>{
+    if(err||!data.ok){el('recsContent').innerHTML=`<p style="color:var(--err)">${err?.message||data?.error}</p>`;return;}
+    renderRecs(data.records);
+  });
+}
+function renderRecs(recs){
+  if(!recs.length){el('recsContent').innerHTML='<p style="color:var(--mu);font-size:.85rem">尚無記錄</p>';return;}
+  el('recsContent').innerHTML='<div style="overflow-x:auto"><table class="rtbl"><thead><tr><th>時間</th><th>競賽</th><th>編號</th><th>具領人</th><th>學校</th><th>文件</th></tr></thead><tbody>'+
+    recs.map(r=>`<tr><td>${r.timestamp}</td><td>${r.contest}</td><td>${r.teamId}</td><td>${r.leaderName}</td><td>${r.school}</td><td>${r.docUrl?`<a href="${r.docUrl}" target="_blank">⬇️</a>`:'-'}</td></tr>`).join('')+
+    '</tbody></table></div>';
+}
+
+// ═══ 設定（後台內）═════════════════════════════════════════
 function updCmd(){
-  const d=el('id-db').value.trim()||'奪標 FileID';
-  const h=el('id-hc').value.trim()||'恆春 FileID';
-  const y=el('id-yc').value.trim()||'洋蔥 FileID';
-  el('cmd-db').textContent=d; el('cmd-hc').textContent=h; el('cmd-yc').textContent=y;
+  const d=v('id-db')||'奪標 FileID',h=v('id-hc')||'恆春 FileID',y=v('id-yc')||'洋蔥 FileID';
+  el('cmd-db').textContent=d;el('cmd-hc').textContent=h;el('cmd-yc').textContent=y;
 }
 function copyCmd(){
-  const d=el('id-db').value.trim(),h=el('id-hc').value.trim(),y=el('id-yc').value.trim();
+  const d=v('id-db'),h=v('id-hc'),y=v('id-yc');
   if(!d||!h||!y){showErr('請先填入三個 FileID','');return;}
-  navigator.clipboard.writeText(`setTemplates("${d}","${h}","${y}")`).then(()=>alert('✅ 已複製！貼到 GAS 執行'));
+  navigator.clipboard.writeText(`setTemplates("${d}","${h}","${y}")`).then(()=>alert('✅ 已複製指令'));
 }
 async function runSetTpl(){
-  if(!chkConn())return;
-  const d=el('id-db').value.trim(),h=el('id-hc').value.trim(),y=el('id-yc').value.trim();
-  if(!d||!h||!y){showErr('請先填入三個 FileID','');return;}
-  hideErr(); showOvl('設定中…');
+  if(!chkConn()||!adminPw){showErr('請先登入後台','');return;}
+  const d=v('id-db'),h=v('id-hc'),y=v('id-yc');
+  if(!d||!h||!y){showErr('請填入三個 FileID','');return;}
+  showOvl('設定中…');
   try {
-    const r=await callPOST({action:'setTemplates',duobiaoId:d,hengchunId:h,yangcongId:y});
+    const r=await callPOST({action:'setTemplates',pw:adminPw,duobiaoId:d,hengchunId:h,yangcongId:y});
     hideOvl();
     el('setup-res').innerHTML=r.ok
-      ?'<div style="color:var(--success);font-weight:600;padding:8px 0">✅ 三個模板 ID 設定成功！</div>'
-      :`<div style="color:var(--danger)">❌ ${r.error}</div>`;
+      ?'<div style="color:var(--ok);font-weight:600">✅ 設定成功！</div>'
+      :`<div style="color:var(--err)">❌ ${r.error}</div>`;
   } catch(e){hideOvl();smartErr(e);}
 }
 
 // ═══ 工具（輔助）════════════════════════════════════════════
-function chkConn(){if(!connected){showErr('請先填入 GAS URL 並點「連線測試」','');return false;}return true;}
+function chkConn(){if(!connected){showErr('請先連線 GAS','');return false;}return true;}
 function showOvl(msg){el('ovMsg').textContent=msg||'處理中…';el('overlay').classList.add('show');}
 function hideOvl(){el('overlay').classList.remove('show');}
-function rHTML(label,docUrl,viewUrl){
-  return `<div class="ri ok"><span class="ril">${label}</span>`+
-    (docUrl?`<a href="${docUrl}" target="_blank">⬇️ 下載 DOCX</a> `:'')+
-    (viewUrl?`<a href="${viewUrl}" target="_blank">🔍 檢視</a>`:'')+`</div>`;
+function rHTML(l,d,vv){
+  return `<div class="ri ok"><span class="ril">${l}</span>`+
+    (d?`<a href="${d}" target="_blank">⬇️ 下載 DOCX</a> `:'')+
+    (vv?`<a href="${vv}" target="_blank">🔍 檢視</a>`:'')+`</div>`;
 }
 </script>
 </body>
