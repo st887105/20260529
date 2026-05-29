@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>車城國小｜機器人競賽領據產生器</title>
+<style>
+  :root {
+    --primary: #1a5276;
+    --primary-light: #2e86c1;
+    --accent: #e67e22;
+    --accent-light: #f39c12;
+    --success: #1e8449;
+    --danger: #c0392b;
+    --bg: #f4f6f8;
+    --card: #ffffff;
+    --border: #d5d8dc;
+    --text: #1c2833;
+    --muted: #7f8c8d;
+    --radius: 10px;
+    --shadow: 0 2px 12px rgba(0,0,0,.10);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: '微軟正黑體', 'Microsoft JhengHei', 'Noto Sans TC', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 15px;
+  }
+
+  /* ── 頂部 Header ── */
+  header {
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    color: #fff;
+    padding: 18px 24px 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.2);
+  }
+  .logo { font-size: 2.2rem; }
+  .header-text h1 { font-size: 1.25rem; font-weight: 700; }
+  .header-text p { font-size: 0.82rem; opacity: .8; margin-top: 2px; }
+  .version-badge {
+    margin-left: auto;
+    background: rgba(255,255,255,.18);
+    border: 1px solid rgba(255,255,255,.35);
+    border-radius: 20px;
+    padding: 3px 10px;
+    font-size: 0.75rem;
+    white-space: nowrap;
+  }
+
+  /* ── 主容器 ── */
+  main { max-width: 900px; margin: 24px auto; padding: 0 16px 60px; }
+
+  /* ── 設定區 ── */
+  .config-bar {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 18px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    box-shadow: var(--shadow);
+  }
+  .config-bar label { font-weight: 600; font-size: 0.88rem; color: var(--muted); white-space: nowrap; }
+  .config-bar input {
+    flex: 1;
+    min-width: 260px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 7px 10px;
+    font-size: 0.88rem;
+  }
+  .btn-connect {
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 18px;
+    cursor: pointer;
+    font-size: 0.88rem;
+    font-weight: 600;
+    transition: background .2s;
+    white-space: nowrap;
+    min-height: 36px;
+  }
+  .btn-connect:hover { background: var(--primary-light); }
+  .conn-status {
+    font-size: 0.82rem;
+    padding: 4px 10px;
+    border-radius: 20px;
+    background: #eee;
+    white-space: nowrap;
+  }
+  .conn-status.ok { background: #d5f5e3; color: var(--success); }
+  .conn-status.err { background: #fadbd8; color: var(--danger); }
+
+  /* ── 標籤切換 ── */
+  .tabs {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 18px;
+    border-bottom: 2px solid var(--border);
+    padding-bottom: 0;
+  }
+  .tab-btn {
+    padding: 10px 22px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--muted);
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    transition: all .2s;
+    border-radius: 6px 6px 0 0;
+  }
+  .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); background: rgba(26,82,118,.06); }
+
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* ── 卡片 ── */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 22px 24px;
+    margin-bottom: 18px;
+    box-shadow: var(--shadow);
+  }
+  .card-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* ── 表單 ── */
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .form-group { display: flex; flex-direction: column; gap: 5px; }
+  .form-group.full { grid-column: 1/-1; }
+  .form-group label { font-size: 0.83rem; font-weight: 600; color: var(--muted); }
+  .form-group input, .form-group select {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 9px 12px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    transition: border .2s;
+    background: #fff;
+  }
+  .form-group input:focus, .form-group select:focus {
+    outline: none;
+    border-color: var(--primary-light);
+    box-shadow: 0 0 0 2px rgba(46,134,193,.15);
+  }
+  .hint-box {
+    background: #eaf4fb;
+    border-left: 3px solid var(--primary-light);
+    border-radius: 0 6px 6px 0;
+    padding: 8px 12px;
+    font-size: 0.82rem;
+    color: #1a5276;
+    margin-top: 10px;
+    grid-column: 1/-1;
+  }
+
+  /* ── 批次輸入 ── */
+  .batch-desc {
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-bottom: 10px;
+    line-height: 1.6;
+  }
+  .batch-desc code {
+    background: #eee;
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-size: 0.82rem;
+  }
+  textarea.batch-input {
+    width: 100%;
+    height: 220px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 12px;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 0.85rem;
+    resize: vertical;
+    transition: border .2s;
+  }
+  textarea.batch-input:focus {
+    outline: none;
+    border-color: var(--primary-light);
+    box-shadow: 0 0 0 2px rgba(46,134,193,.15);
+  }
+  .batch-preview { margin-top: 14px; }
+  .batch-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    margin-bottom: 6px;
+    font-size: 0.87rem;
+    background: #fafafa;
+    flex-wrap: wrap;
+  }
+  .batch-row .badge {
+    background: var(--primary);
+    color: #fff;
+    border-radius: 4px;
+    padding: 1px 7px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .batch-row .badge.err { background: var(--danger); }
+  .batch-row span { color: var(--muted); }
+
+  /* ── 按鈕 ── */
+  .btn-row { display: flex; gap: 10px; margin-top: 18px; flex-wrap: wrap; }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 22px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .2s;
+    min-height: 44px;
+    font-family: inherit;
+  }
+  .btn-primary { background: var(--primary); color: #fff; }
+  .btn-primary:hover { background: var(--primary-light); }
+  .btn-accent { background: var(--accent); color: #fff; }
+  .btn-accent:hover { background: var(--accent-light); }
+  .btn-outline { background: #fff; color: var(--primary); border: 2px solid var(--primary); }
+  .btn-outline:hover { background: #eaf4fb; }
+  .btn:disabled { opacity: .5; cursor: not-allowed; }
+
+  /* ── 進度與結果 ── */
+  .progress-bar-wrap {
+    background: #eee;
+    border-radius: 20px;
+    height: 8px;
+    margin: 14px 0 6px;
+    overflow: hidden;
+  }
+  .progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary), var(--primary-light));
+    border-radius: 20px;
+    transition: width .4s;
+    width: 0%;
+  }
+  .progress-text { font-size: 0.82rem; color: var(--muted); text-align: center; margin-bottom: 10px; }
+
+  .result-list { margin-top: 14px; }
+  .result-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+    background: #fff;
+    flex-wrap: wrap;
+  }
+  .result-item.ok { border-left: 4px solid var(--success); }
+  .result-item.err { border-left: 4px solid var(--danger); }
+  .result-item .ri-label { font-weight: 600; flex: 1; min-width: 120px; }
+  .result-item a {
+    color: var(--primary-light);
+    text-decoration: none;
+    font-size: 0.85rem;
+    white-space: nowrap;
+  }
+  .result-item a:hover { text-decoration: underline; }
+
+  /* ── 記錄頁 ── */
+  .records-table { width: 100%; border-collapse: collapse; font-size: 0.87rem; }
+  .records-table th {
+    background: var(--primary);
+    color: #fff;
+    padding: 9px 12px;
+    text-align: left;
+    font-weight: 600;
+  }
+  .records-table td { padding: 8px 12px; border-bottom: 1px solid var(--border); }
+  .records-table tr:hover td { background: #eaf4fb; }
+  .records-table a { color: var(--primary-light); text-decoration: none; }
+
+  /* ── 錯誤橫幅 ── */
+  .error-banner {
+    background: #fadbd8;
+    border: 1px solid #e74c3c;
+    border-radius: 8px;
+    padding: 12px 16px;
+    color: var(--danger);
+    font-size: 0.9rem;
+    margin-bottom: 14px;
+    display: none;
+  }
+  .error-banner.show { display: flex; align-items: center; gap: 8px; }
+
+  /* ── 覆蓋 Loading ── */
+  .overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.35);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    display: none;
+  }
+  .overlay.show { display: flex; }
+  .spinner {
+    width: 50px; height: 50px;
+    border: 5px solid rgba(255,255,255,.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin .8s linear infinite;
+    margin-bottom: 14px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .overlay p { color: #fff; font-size: 1.05rem; font-weight: 600; }
+
+  footer {
+    text-align: center;
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin-top: 40px;
+    padding-bottom: 20px;
+  }
+
+  @media (max-width: 600px) {
+    .form-grid { grid-template-columns: 1fr; }
+    .form-group.full { grid-column: 1; }
+    header { flex-wrap: wrap; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">🤖</div>
+  <div class="header-text">
+    <h1>車城國中 機器人競賽 領據產生器</h1>
+    <p>屏東縣立車城國民中學 115 年度 智創機器人競賽 獎金領據</p>
+  </div>
+  <div class="version-badge">v1.0.0</div>
+</header>
+
+<main>
+  <!-- GAS 連線設定 -->
+  <div class="config-bar">
+    <label>🔗 GAS 網址</label>
+    <input type="text" id="gasUrl" placeholder="貼上 GAS Web App URL（https://script.google.com/macros/s/...）" />
+    <button class="btn-connect" onclick="connectGAS()">連線測試</button>
+    <span class="conn-status" id="connStatus">未連線</span>
+  </div>
+
+  <div class="error-banner" id="errBanner">
+    <span>⚠️</span> <span id="errMsg"></span>
+  </div>
+
+  <!-- 標籤 -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('single')">📄 單筆填寫</button>
+    <button class="tab-btn" onclick="switchTab('batch')">📋 批次貼上</button>
+    <button class="tab-btn" onclick="switchTab('records'); loadRecords()">📊 產生記錄</button>
+  </div>
+
+  <!-- 單筆 -->
+  <div class="tab-panel active" id="tab-single">
+    <div class="card">
+      <div class="card-title">📝 填寫領據資料</div>
+      <div class="form-grid">
+        <div class="form-group full">
+          <label>競賽項目 *</label>
+          <select id="s-contest">
+            <option value="">── 請選擇 ──</option>
+            <option value="奪標攻防賽-國小組">機器人競賽－奪標攻防賽－國小組（優等 400元）</option>
+            <option value="恆春半島認知大作戰-國小組">機器人競賽－恆春半島認知大作戰－國小組（優等 150元）</option>
+            <option value="洋蔥分類大作戰-國小組">機器人競賽－洋蔥分類大作戰－國小組（優等 150元）</option>
+            <option value="奪標攻防賽-國中組">機器人競賽－奪標攻防賽－國中組（優等 400元）</option>
+            <option value="恆春半島認知大作戰-國中組">機器人競賽－恆春半島認知大作戰－國中組（優等 150元）</option>
+            <option value="洋蔥分類大作戰-國中組">機器人競賽－洋蔥分類大作戰－國中組（優等 150元）</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>學生隊伍編號 *</label>
+          <input type="text" id="s-teamId" placeholder="例：014" />
+        </div>
+        <div class="form-group">
+          <label>隊伍名稱 *</label>
+          <input type="text" id="s-teamName" placeholder="例：射寮分校14號" />
+        </div>
+        <div class="form-group">
+          <label>學校名稱（本校/分校）*</label>
+          <input type="text" id="s-school" placeholder="例：車城國小（本校）" />
+        </div>
+        <div class="form-group">
+          <label>具領人姓名 *</label>
+          <input type="text" id="s-leaderName" placeholder="指導老師或家長姓名" />
+        </div>
+        <div class="form-group">
+          <label>身份證字號 *</label>
+          <input type="text" id="s-idNumber" placeholder="A123456789" maxlength="10" />
+        </div>
+        <div class="form-group full">
+          <label>戶籍地址 *</label>
+          <input type="text" id="s-address" placeholder="例：屏東縣車城鄉保力村..." />
+        </div>
+        <div class="hint-box full">
+          ℹ️ 系統將自動帶入競賽項目對應的 <strong>獎金金額</strong>、<strong>名次（優等）</strong>、<strong>領款日期（6/6）</strong>，並產生格式一致的 Word 領據。
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="generateSingle()">🖨️ 產生領據 DOC</button>
+        <button class="btn btn-outline" onclick="clearSingle()">🗑️ 清除</button>
+      </div>
+      <div id="single-result" class="result-list"></div>
+    </div>
+  </div>
+
+  <!-- 批次 -->
+  <div class="tab-panel" id="tab-batch">
+    <div class="card">
+      <div class="card-title">📋 批次貼上資料</div>
+      <div class="batch-desc">
+        請貼上 <strong>Tab 分隔</strong>（直接從 Excel 複製）或 <strong>逗號分隔</strong> 的資料，每行一筆，欄位順序：<br>
+        <code>競賽代碼</code> <code>隊伍編號</code> <code>隊伍名稱</code> <code>學校</code> <code>具領人</code> <code>身份證</code> <code>戶籍地址</code><br><br>
+        競賽代碼：<code>奪標小</code>／<code>恆春小</code>／<code>洋蔥小</code>／<code>奪標中</code>／<code>恆春中</code>／<code>洋蔥中</code>
+        （或直接輸入完整名稱如 <code>奪標攻防賽-國小組</code>）
+      </div>
+      <textarea class="batch-input" id="batchInput" placeholder="範例（可直接從 Excel 複製貼上）：
+奪標小	014	射寮小隊	車城國小（射寮分校）	王小明	A123456789	屏東縣車城鄉射寮村...
+恆春小	007	溫泉特攻隊	車城國小（溫泉分校）	李大華	B234567890	屏東縣恆春鎮..." oninput="parseBatch()"></textarea>
+      <div class="batch-preview" id="batchPreview"></div>
+      <div id="batch-progress" style="display:none">
+        <div class="progress-bar-wrap"><div class="progress-bar" id="progressBar"></div></div>
+        <div class="progress-text" id="progressText">準備中...</div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-accent" id="batchBtn" onclick="generateBatch()">🚀 批次產生全部領據</button>
+        <button class="btn btn-outline" onclick="document.getElementById('batchInput').value=''; document.getElementById('batchPreview').innerHTML='';">🗑️ 清除</button>
+      </div>
+      <div id="batch-result" class="result-list"></div>
+    </div>
+  </div>
+
+  <!-- 記錄 -->
+  <div class="tab-panel" id="tab-records">
+    <div class="card">
+      <div class="card-title">📊 產生記錄</div>
+      <div style="margin-bottom:14px">
+        <button class="btn btn-outline" onclick="loadRecords()">🔄 重新載入</button>
+      </div>
+      <div id="records-content">
+        <p style="color:var(--muted); text-align:center; padding: 30px 0;">點擊「重新載入」查看記錄</p>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>車城國小資訊老師 @ 機器人競賽領據系統 v1.0.0</footer>
+
+<div class="overlay" id="overlay">
+  <div class="spinner"></div>
+  <p id="overlayMsg">產生中，請稍候…</p>
+</div>
+
+<script>
+// ── 競賽代碼對照 ──────────────────────────────────────────────
+const CONTEST_MAP = {
+  '奪標小': '奪標攻防賽-國小組',
+  '恆春小': '恆春半島認知大作戰-國小組',
+  '洋蔥小': '洋蔥分類大作戰-國小組',
+  '奪標中': '奪標攻防賽-國中組',
+  '恆春中': '恆春半島認知大作戰-國中組',
+  '洋蔥中': '洋蔥分類大作戰-國中組',
+};
+const FULL_CONTEST_NAMES = Object.values(CONTEST_MAP);
+
+// ── 狀態 ─────────────────────────────────────────────────────
+let gasUrl = localStorage.getItem('gasUrl') || '';
+let connected = false;
+let parsedRows = [];
+
+// ── 初始化 ────────────────────────────────────────────────────
+window.onload = () => {
+  if (gasUrl) {
+    document.getElementById('gasUrl').value = gasUrl;
+    connectGAS();
+  }
+};
+
+// ── 儲存 GAS URL ──────────────────────────────────────────────
+document.getElementById('gasUrl').addEventListener('change', () => {
+  gasUrl = document.getElementById('gasUrl').value.trim();
+  localStorage.setItem('gasUrl', gasUrl);
+});
+
+// ── 標籤切換 ─────────────────────────────────────────────────
+function switchTab(name) {
+  document.querySelectorAll('.tab-btn').forEach((b, i) => {
+    const tabs = ['single', 'batch', 'records'];
+    b.classList.toggle('active', tabs[i] === name);
+  });
+  document.querySelectorAll('.tab-panel').forEach(p => {
+    p.classList.toggle('active', p.id === 'tab-' + name);
+  });
+}
+
+// ── JSONP ──────────────────────────────────────────────────────
+function callGAS_JSONP(params, cb) {
+  const cbName = 'gasJSONP_' + Date.now();
+  window[cbName] = (data) => {
+    delete window[cbName];
+    document.head.removeChild(script);
+    cb(null, data);
+  };
+  const qs = Object.entries({ ...params, callback: cbName })
+    .map(([k, v]) => `${k}=${encodeURIComponent(v)}`).join('&');
+  const script = document.createElement('script');
+  script.onerror = () => {
+    delete window[cbName];
+    document.head.removeChild(script);
+    cb(new Error('JSONP 連線失敗'));
+  };
+  script.src = gasUrl + '?' + qs;
+  document.head.appendChild(script);
+}
+
+// ── Raw POST ───────────────────────────────────────────────────
+async function callGAS_POST(data) {
+  const res = await fetch(gasUrl, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain' },
+    body: JSON.stringify(data),
+    redirect: 'follow'
+  });
+  if (!res.ok) throw new Error('HTTP ' + res.status);
+  return await res.json();
+}
+
+// ── 連線測試 ──────────────────────────────────────────────────
+function connectGAS() {
+  gasUrl = document.getElementById('gasUrl').value.trim();
+  localStorage.setItem('gasUrl', gasUrl);
+  if (!gasUrl) { showErr('請先填入 GAS Web App URL'); return; }
+
+  const st = document.getElementById('connStatus');
+  st.className = 'conn-status';
+  st.textContent = '連線中…';
+
+  callGAS_JSONP({ action: 'getConfig' }, (err, data) => {
+    if (err || !data || !data.ok) {
+      st.className = 'conn-status err';
+      st.textContent = '❌ 連線失敗';
+      showErr('無法連線 GAS，請確認：① URL 正確 ② 部署身分=我 ③ 存取=任何人');
+    } else {
+      st.className = 'conn-status ok';
+      st.textContent = '✅ 已連線';
+      connected = true;
+      hideErr();
+    }
+  });
+}
+
+// ── 錯誤橫幅 ─────────────────────────────────────────────────
+function showErr(msg) {
+  const b = document.getElementById('errBanner');
+  document.getElementById('errMsg').textContent = msg;
+  b.classList.add('show');
+}
+function hideErr() {
+  document.getElementById('errBanner').classList.remove('show');
+}
+
+// ── 單筆產生 ─────────────────────────────────────────────────
+async function generateSingle() {
+  if (!checkConnected()) return;
+  const contest = document.getElementById('s-contest').value;
+  const teamId = document.getElementById('s-teamId').value.trim();
+  const teamName = document.getElementById('s-teamName').value.trim();
+  const school = document.getElementById('s-school').value.trim();
+  const leaderName = document.getElementById('s-leaderName').value.trim();
+  const idNumber = document.getElementById('s-idNumber').value.trim();
+  const address = document.getElementById('s-address').value.trim();
+
+  if (!contest || !teamId || !teamName || !school || !leaderName || !idNumber || !address) {
+    showErr('請填寫所有必填欄位（*）'); return;
+  }
+
+  showOverlay('產生領據中，請稍候…');
+  hideErr();
+
+  try {
+    const r = await callGAS_POST({ action: 'generateDoc', contest, teamId, teamName, school, leaderName, idNumber, address });
+    hideOverlay();
+    if (r.ok) {
+      document.getElementById('single-result').innerHTML = `
+        <div class="result-item ok">
+          <span class="ri-label">✅ ${leaderName}（${contest}）</span>
+          <a href="${r.downloadUrl || r.docUrl}" target="_blank">⬇️ 下載 DOC</a>
+          <a href="${r.viewUrl}" target="_blank">🔍 線上檢視</a>
+        </div>`;
+    } else {
+      showErr('產生失敗：' + (r.error || '未知錯誤'));
+    }
+  } catch (e) {
+    hideOverlay();
+    showErr('POST 連線失敗：' + e.message);
+  }
+}
+
+function clearSingle() {
+  ['s-contest','s-teamId','s-teamName','s-school','s-leaderName','s-idNumber','s-address'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el.tagName === 'SELECT') el.value = '';
+    else el.value = '';
+  });
+  document.getElementById('single-result').innerHTML = '';
+  hideErr();
+}
+
+// ── 批次解析 ─────────────────────────────────────────────────
+function parseBatch() {
+  const raw = document.getElementById('batchInput').value;
+  const lines = raw.split('\n').map(l => l.trim()).filter(Boolean);
+  parsedRows = [];
+
+  lines.forEach((line, i) => {
+    // 支援 Tab 或逗號分隔
+    const cols = line.includes('\t') ? line.split('\t') : line.split(',');
+    if (cols.length < 7) {
+      parsedRows.push({ err: `第${i+1}行：欄位不足（需要7欄）`, raw: line });
+      return;
+    }
+    let [contestCode, teamId, teamName, school, leaderName, idNumber, ...addrParts] = cols.map(c => c.trim());
+    const address = addrParts.join(',').trim();
+    // 對照競賽代碼
+    const contest = CONTEST_MAP[contestCode] || (FULL_CONTEST_NAMES.includes(contestCode) ? contestCode : null);
+    if (!contest) {
+      parsedRows.push({ err: `第${i+1}行：競賽代碼「${contestCode}」無效`, raw: line });
+      return;
+    }
+    parsedRows.push({ contest, teamId, teamName, school, leaderName, idNumber, address });
+  });
+
+  renderBatchPreview();
+}
+
+function renderBatchPreview() {
+  const div = document.getElementById('batchPreview');
+  if (!parsedRows.length) { div.innerHTML = ''; return; }
+  div.innerHTML = `<p style="font-size:.85rem;color:var(--muted);margin-bottom:8px">解析結果（共 ${parsedRows.length} 筆）：</p>` +
+    parsedRows.map(r => r.err
+      ? `<div class="batch-row"><span class="badge err">❌</span> <span style="color:var(--danger)">${r.err}</span></div>`
+      : `<div class="batch-row"><span class="badge">✔</span> <strong>${r.contest}</strong> <span>| 編號：${r.teamId}</span> <span>| ${r.leaderName}</span> <span>| ${r.school}</span></div>`
+    ).join('');
+}
+
+// ── 批次產生 ─────────────────────────────────────────────────
+async function generateBatch() {
+  if (!checkConnected()) return;
+  const validRows = parsedRows.filter(r => !r.err);
+  if (!validRows.length) { showErr('沒有有效資料可以產生，請先貼上資料'); return; }
+
+  const hasErr = parsedRows.some(r => r.err);
+  if (hasErr && !confirm(`部分資料有解析錯誤，將略過錯誤行，繼續產生 ${validRows.length} 筆？`)) return;
+
+  // 逐筆產生（避免 GAS 逾時）
+  const progressDiv = document.getElementById('batch-progress');
+  const bar = document.getElementById('progressBar');
+  const progressText = document.getElementById('progressText');
+  const resultDiv = document.getElementById('batch-result');
+
+  progressDiv.style.display = 'block';
+  resultDiv.innerHTML = '';
+  document.getElementById('batchBtn').disabled = true;
+  hideErr();
+
+  const results = [];
+  for (let i = 0; i < validRows.length; i++) {
+    const row = validRows[i];
+    progressText.textContent = `產生中 ${i+1} / ${validRows.length}：${row.leaderName}（${row.contest}）`;
+    bar.style.width = `${Math.round((i / validRows.length) * 100)}%`;
+
+    try {
+      const r = await callGAS_POST({ action: 'generateDoc', ...row });
+      results.push({ ...r, row });
+      if (r.ok) {
+        resultDiv.innerHTML += `<div class="result-item ok">
+          <span class="ri-label">✅ ${row.leaderName}（${row.contest}｜${row.teamId}）</span>
+          <a href="${r.docUrl}" target="_blank">⬇️ 下載 DOC</a>
+          <a href="${r.viewUrl}" target="_blank">🔍 檢視</a>
+        </div>`;
+      } else {
+        resultDiv.innerHTML += `<div class="result-item err">❌ ${row.leaderName}：${r.error || '失敗'}</div>`;
+      }
+    } catch (e) {
+      resultDiv.innerHTML += `<div class="result-item err">❌ ${row.leaderName}：POST 失敗 ${e.message}</div>`;
+    }
+    // 小延遲避免 GAS 429
+    await new Promise(res => setTimeout(res, 800));
+  }
+
+  bar.style.width = '100%';
+  progressText.textContent = `✅ 完成！共產生 ${results.filter(r=>r.ok).length} 份領據`;
+  document.getElementById('batchBtn').disabled = false;
+}
+
+// ── 記錄 ─────────────────────────────────────────────────────
+function loadRecords() {
+  if (!checkConnected()) return;
+  const div = document.getElementById('records-content');
+  div.innerHTML = '<p style="color:var(--muted);text-align:center;padding:20px">載入中…</p>';
+
+  callGAS_JSONP({ action: 'getRecords' }, (err, data) => {
+    if (err || !data.ok) {
+      div.innerHTML = `<p style="color:var(--danger)">載入失敗：${err?.message || data?.error}</p>`;
+      return;
+    }
+    if (!data.records.length) {
+      div.innerHTML = '<p style="color:var(--muted);text-align:center;padding:30px">尚無記錄</p>';
+      return;
+    }
+    div.innerHTML = `<div style="overflow-x:auto">
+      <table class="records-table">
+        <thead><tr>
+          <th>時間</th><th>競賽項目</th><th>編號</th><th>隊伍名稱</th><th>具領人</th><th>學校</th><th>文件</th>
+        </tr></thead>
+        <tbody>
+          ${data.records.map(r => `<tr>
+            <td>${r.timestamp}</td>
+            <td>${r.contest}</td>
+            <td>${r.teamId}</td>
+            <td>${r.teamName}</td>
+            <td>${r.leaderName}</td>
+            <td>${r.school}</td>
+            <td>${r.docUrl ? `<a href="${r.docUrl}" target="_blank">⬇️ DOC</a>` : '-'}</td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>`;
+  });
+}
+
+// ── 工具 ─────────────────────────────────────────────────────
+function checkConnected() {
+  if (!connected) { showErr('⚠️ 請先填入 GAS URL 並點「連線測試」'); return false; }
+  return true;
+}
+function showOverlay(msg) {
+  document.getElementById('overlayMsg').textContent = msg || '處理中…';
+  document.getElementById('overlay').classList.add('show');
+}
+function hideOverlay() {
+  document.getElementById('overlay').classList.remove('show');
+}
+</script>
+</body>
+</html>
